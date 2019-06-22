@@ -1,0 +1,3 @@
+<launch>
+  <node output="screen" pkg="ROS_WebApp" type="manage.py" args="runserver 0:8000 --noreload" name="manage"/>
+</launch>
