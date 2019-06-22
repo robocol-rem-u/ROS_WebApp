@@ -4,21 +4,24 @@ import channels.layers
 import simplejson as json
 import time
 import threading
-import _thread
 import socket
 import serial
 import math
 import urllib.request
 import pygame
 import numpy as np
+import os
 
+#Channel REDIS layer
+channel_layer = channels.layers.get_channel_layer()
+
+#ROS imports
 from std_msgs.msg import String
 import rospy
 
-channel_layer = channels.layers.get_channel_layer()
 
+#ROS Node declarations
 rospy.init_node('Django_node', anonymous=False)
-tractionPublisher = rospy.Publisher('tractionCMD', String, queue_size=10)
 
 
 #### CONSTANTES ####
@@ -34,7 +37,7 @@ WIFI = True
 DIR_CAM0_FOSCAM = "http://192.168.0.120:57055"
 ACCION_JK = 0
 COM_CHANGE = 1
-ACTIVAR_JK = True
+ACTIVAR_JK = False
 TOGGLE_MOT_STATUS = 0
 
 #### VARIABLES ####
@@ -140,7 +143,7 @@ if CONECTAR_XBEE:
 		print("\t \t -- Conexion con XBee S8 inicializada --")
 	except:
 		print("\033[1;31mNo se pudo inicializar la conexión con la XBee S8 \033[0;0m")
-		_thread.interrupt_main()
+		os._exit(0)
 if CONECTAR_WIFI:
 	s = socket.socket()
 	s.settimeout(1)
@@ -149,7 +152,7 @@ if CONECTAR_WIFI:
 		s.send(str.encode("C+RF"))
 	except:
 		print("\033[1;31mError en conexión Wi-Fi \033[0;0m")
-		_thread.interrupt_main()
+		os._exit(0)
 	s.close()
 if not (CONECTAR_WIFI and CONECTAR_XBEE):
 	print("\033[1;31mNo estan activas todas las conexiones, encontrara funcionalidad limitada \033[0;0m")
@@ -735,4 +738,12 @@ def ThreadEnviarAInterfaz():
 
 
 
+#ROS auxiliary exit check
 
+def ROS_exit_helper():
+	while True:
+		if rospy.is_shutdown():
+			print("Killing Django...")
+			os._exit(0)
+		time.sleep(1)
+threading.Thread(target=ROS_exit_helper).start()
