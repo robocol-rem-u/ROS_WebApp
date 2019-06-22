@@ -1,0 +1,1052 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ROBOCOL - Autonomous Control</title>
+
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/jquery.animate-shadow-min.js' %}"></script>
+	<script src="{% static 'js/jquery.color-2.1.2.min.js' %}"></script>
+
+	<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+	<script src="{% static 'js/leaflet.js' %}"></script>
+
+
+	
+
+	<style type="text/css">
+	
+	label{
+		font-family: Helvetica;
+	}
+</style>
+
+<style type="text/css">
+
+.form-style-10 input {
+	display: block;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width: 49%;
+	padding: 6px;
+	font-size: 16px;
+	font-family: Helvetica;
+	border-radius: 6px;
+	-webkit-border-radius:6px;
+	-moz-border-radius:6px;
+	border: 2px solid #fff;
+	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+	-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+	-webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+}
+.form-style-10 label{
+	display: block;
+	font: 16px Arial, Helvetica, sans-serif;
+	color: #fff;
+	margin-bottom: 15px;
+	width: 220px;
+}
+</style>
+
+
+<style type="text/css">
+.slider {
+	-webkit-appearance: none;
+	width: 220px;
+	background: #bbbbbb;
+	outline: none;
+	opacity: 0.7;
+}
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	background: #000;
+	cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	background: #1a6cb5;
+	cursor: pointer;
+}
+
+
+#main-circle {
+	width: 100px;
+	height: 100px;
+	margin: 4% auto;
+	background: linear-gradient(#DF293A, #EF495A);
+	border-radius: 75px;
+	box-shadow: 1px 5px 1px #CE152A;
+	transition: all .03s ease-in;
+	cursor: pointer;
+}
+
+
+#inner-circle {
+	position: relative;
+	color: #FFF;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.85);
+	font-family: "Lato", Verdana, sans-serif;
+	font-size: 20px;
+	padding-top: 28px;
+	width: 75px;
+	height: 45px;
+	border-radius: 60px;
+	background: radial-gradient(#EF495A, #DE2839);
+	box-shadow: 1px 2px 1px rgba(255, 255, 255, 0.15) inset;
+	margin: 0 auto;
+	top: 12.5px;
+	cursor: pointer;
+}
+
+#main-circle:active {
+	box-shadow: 1px 3px 1px #CE152A;
+	cursor: pointer;
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+
+
+/* Remove margins and padding from the list */
+ul {
+	margin: 20px;
+	padding: 0;
+	overflow-y: auto;
+	border-radius: 15px;
+	background: white;
+	height: calc(100% - 40px);
+
+}
+
+/* Style the list items */
+ul li {
+	cursor: pointer;
+	position: relative;
+	padding: 10px 8px 10px 40px;
+	list-style-type: none;
+	background: #eee;
+	font-size: 18px;
+	transition: 0.2s;
+
+	/* make the list items unselectable */
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+	font-family: Helvetica;
+
+
+
+
+}
+
+
+
+@media screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
+	ul li{
+		font-size: 5px !important;
+	}
+}
+
+/* Set all odd list items to a different color (zebra-stripes) */
+ul li:nth-child(odd) {
+	background: #f9f9f9;
+}
+
+/* Darker background-color on hover */
+ul li:hover {
+	background: #ddd;
+}
+
+/* When clicked on, add a background color and strike out text */
+ul li.checked {
+	background: #55c165;
+	color: #fff;
+	text-decoration: line-through;
+}
+
+/* Add a "checked" mark when clicked on */
+ul li.checked::before {
+	content: '';
+	position: absolute;
+	border-color: #fff;
+	border-style: solid;
+	border-width: 0 2px 2px 0;
+	top: 10px;
+	left: 16px;
+	transform: rotate(45deg);
+	height: 15px;
+	width: 7px;
+}
+
+/* Style the close button */
+.close {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 10px 16px 10px 16px;
+}
+
+.close:hover {
+	background-color: #f44336;
+	color: white;
+}
+
+/* Style the header */
+.header {
+	background-color: #f44336;
+	padding: 30px 40px;
+	color: white;
+	text-align: center;
+}
+
+/* Clear floats after the header */
+.header:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+/* Style the input */
+input {
+	margin: 0;
+	border-radius: 0;
+	width: 75%;
+	padding: 10px;
+	float: left;
+	font-size: 16px;
+}
+
+/* Style the "Add" button */
+.addBtn {
+	padding: 10px;
+	width: 25%;
+	background: #d9d9d9;
+	color: #555;
+	float: left;
+	text-align: center;
+	font-size: 16px;
+	cursor: pointer;
+	transition: 0.3s;
+	border-radius: 0;
+}
+
+.addBtn:hover {
+	background-color: #bbb;
+}
+
+
+</style>
+
+
+
+
+<style type="text/css">
+button{
+	background:#b15353;
+	border:0;
+	color:#fff;
+	padding:10px;
+	font-size:22px;
+	width:100%;
+	display:block;
+	cursor:pointer;
+	outline: none;
+}
+button:active{
+	filter: brightness(90%);
+}
+button:disabled,
+button[disabled]{
+	filter: brightness(70%);
+	cursor: default;
+}
+</style>
+
+
+
+
+
+
+
+
+
+</head>
+
+<style type="text/css">
+@font-face {
+	font-family: 'RoboFont';
+	src: url('{% static 'fonts/Bank Gothic Medium.ttf' %}');
+}
+</style>
+
+
+<body scroll="no" style="background: linear-gradient(#ffffff, #000000); margin: 0;height: 100vh;overflow: hidden;">
+
+
+	<div style="position: absolute;top:0;left: 0;right: 0">
+		<label id="titulo" style="display: block;margin-top: 72px;margin-bottom: 10px;font-family: RoboFont;font-size: 100px;color: rgb(60, 49, 49);text-align: center;">ROBOCOL</label>
+	</div>
+
+
+
+	<div id="map" style="position: absolute;width: 50%;height: 70vh;z-index: 9;margin: auto auto auto 27px;top: 0px;bottom: 0px;">
+		
+		<img id="img_center" src="{% static 'img/map_center_check.png' %}" style="z-index: 10000;position: absolute;left: 6px;bottom: 6px;height: 50px;cursor: pointer;" onclick="handdleCenter()">
+
+	</div>
+
+
+
+	<div style="position: absolute;width: calc(50% - 80px);height: 70vh;z-index: 9;margin: auto;top: 0px;bottom: 0px;right: 27px;">
+		
+		<div style="text-align: center;margin-top: 20px">
+			<label style="font-weight: 100; font-size: 25px;display: inline-block;margin-right: 20px">Operating status:</label>
+			<label id="stateIndicator" style="font-weight: 400; font-size: 25px;display: inline-block;color:#c72d2d">Disabled</label>
+		</div>
+
+
+
+		<div style="border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);background: #ffffff08;width: 100%;height:43vh;margin-top: 20px">
+
+			<div style="width: 50%;height: 100%;display: inline-block;">
+
+				<ul id="myUL" style="box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.58);">
+				</ul>
+				
+			</div>
+
+
+			<div style="width: calc(50% - 40px);height: 61%;display: inline-block;text-align: center;position: absolute;">
+
+
+				<div style="position: absolute;top: 0;bottom: 0;left: 0;right: 0;margin:auto;height: 214px;width: 90%">
+
+					<div style="width: 100%;text-align: center;margin-bottom: 20px">
+						<label style="font-weight: 100; font-size: 25px;margin-bottom: 10px;display: inline-block;">Current location</label><br>
+						<label id="location_indicator" style="font-weight: 400; font-size: 1.5vw;;display: inline-block;color:black">0, 0</label>
+					</div>
+					<br>
+
+					<button id="but_start" style="background: #159a15;border: 2px solid #e2e0e0;" onclick="start_control()">Start</button>
+
+					<br>
+
+					<button id="but_continue" style="background: #e4863c;border: 2px solid #e2e0e0;" disabled onclick="continue_control()">Continue</button>
+
+				</div>
+
+
+			</div>
+			
+		</div>
+
+
+
+		<script type="text/javascript">
+			STOP = 3
+			START = 4
+			CONTINUE = 5
+			function emergency_stop() {
+				var toSend = {};
+				toSend['type'] = STOP
+				mainSocket.send(JSON.stringify(toSend));
+			}
+			function start_control() {
+				var toSend = {};
+				toSend['type'] = START
+				mainSocket.send(JSON.stringify(toSend));
+			}
+			function continue_control() {
+				var toSend = {};
+				toSend['type'] = CONTINUE
+				mainSocket.send(JSON.stringify(toSend));
+			}
+		</script>
+
+
+
+
+		<div style="text-align: center;">
+			<div id="main-circle" onclick="emergency_stop()" style="">
+				<div id="inner-circle" style="user-select: none;font-weight: 100;">STOP</div>
+			</div>
+		</div>
+
+
+
+	</div>
+
+
+
+
+	<script type='text/javascript'>
+
+
+		map = new L.Map('map').setView([ 4.6029687,-74.0653395 ], 19);
+
+
+		map.on('drag',
+			function mapClickListen(e) {
+				if(centering==true)
+					{handdleCenter()}
+			}
+			);
+
+
+
+		L.tileLayer('{% static "maps/data" %}/{z}/{x}/{y}.png', {
+			attribution: 'Map data from <a href="http://openstreetmap.org">OpenStreetMap</a> (Offline). ROBOCOL',
+			maxZoom: 19,
+		}).addTo(map);
+
+
+		redIcon = new L.Icon({
+			iconUrl: '{% static "img/marker-icon-2x-red.png" %}',
+			shadowUrl: '{% static "img/marker-shadow.png" %}',
+			iconSize: [25*1.5, 41*1.5],
+			iconAnchor: [12*1.5, 41*1.5],
+			popupAnchor: [1*1.5, -34*1.5],
+			shadowSize: [41*1.5, 41*1.5]
+		});
+
+
+		greenIcon = new L.Icon({
+			iconUrl: '{% static "img/marker-icon-2x-green.png" %}',
+			shadowUrl: '{% static "img/marker-shadow.png" %}',
+			iconSize: [25*1.5, 41*1.5],
+			iconAnchor: [12*1.5, 41*1.5],
+			popupAnchor: [1*1.5, -34*1.5],
+			shadowSize: [41*1.5, 41*1.5]
+		});
+
+
+		blueIcon = new L.Icon({
+			iconUrl: '{% static "img/marker-icon-2x-blue.png" %}',
+			shadowUrl: '{% static "img/marker-shadow.png" %}',
+			iconSize: [25*1.5, 41*1.5],
+			iconAnchor: [12*1.5, 41*1.5],
+			popupAnchor: [1*1.5, -34*1.5],
+			shadowSize: [41*1.5, 41*1.5]
+		});
+
+		yellowIcon = new L.Icon({
+			iconUrl: '{% static "img/marker-icon-2x-yellow.png" %}',
+			shadowUrl: '{% static "img/marker-shadow.png" %}',
+			iconSize: [25*1.5, 41*1.5],
+			iconAnchor: [12*1.5, 41*1.5],
+			popupAnchor: [1*1.5, -34*1.5],
+			shadowSize: [41*1.5, 41*1.5]
+		});
+
+
+
+		roverIcon = new L.Icon({
+			iconUrl: '{% static "img/rover_icon_map.png" %}',
+			iconSize: [25*1.5, 25*1.5],
+			iconAnchor: [12*1.5, 16*1.5],
+			popupAnchor: [1*1.5, -34*1.5],
+			shadowSize: [41*1.5, 41*1.5]
+		});
+
+		markerGroup = L.layerGroup().addTo(map);
+		poliGroup = L.layerGroup().addTo(map);
+		
+
+
+
+//var mb = 
+
+</script>
+
+
+
+
+
+
+
+<div style="position: absolute;width: 100vw;z-index: 4;left: 0;bottom: 0;border-top: 2.5px solid rgb(107, 107, 107);background-color: rgba(255, 255, 255, 0.28);padding-bottom: 14px;height: 65px;padding: 5px; display: flex;" id="bottom_banner">
+
+	<div id="btn1" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/'">
+
+		<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Traction</label>
+
+	</div>
+
+	<div id="btn2" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/auto'">
+
+		<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Autonomous Control</label>
+
+	</div>
+
+	<div id="btn3" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/roboticArm'">
+
+		<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Robotic Arm</label>
+
+	</div>
+
+	<div id="btn4" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/geo'">
+
+		<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Geoscientific Toolkit</label>
+
+	</div>
+
+	<div id="btn5" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/status'">
+
+		<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Rover Status</label>
+
+	</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- Modal para configuracion controladores (PID)-->
+
+<div id="ModalConfig" class="modalConfig">
+
+	<div class="modal-contentConfig" id="contenidoModalConfig" style="height: 261px">
+
+		<span class="closeConfig">&times;</span>
+
+		<label style="font-family: Helvetica;font-size: 24px;margin-top: 9px;display: inline-block;" id="coordinatesText1">GPS Coordinates to update</label>
+
+		<style type="text/css">
+
+		.form-group {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.form-group label {
+			flex: none;
+			display: block;
+			width: 140px;
+			font-size: 1em;
+			margin-bottom: 20px;
+			font-family: Helvetica
+		}
+
+		.form-group input{
+			width: 100%;
+			height: 13px;
+			font-family: Helvetica;
+			font-size: 1em;
+		}
+	</style>
+
+	<div style="margin-top: 40px;">
+		<form onsubmit="return false;">
+			<div class="form-group" style="margin-top: 25px;">
+				<label style="padding-top: 12px;">Latitude:</label>
+				<input style="outline: none;border-radius: 14px;" id="lat_field" class="input-control" type="number" step="0.000000001"/>
+			</div>
+
+			<div class="form-group">
+				<label style="padding-top: 12px;">Longitude:</label>
+				<input style="outline: none;border-radius: 14px;" id="long_field" class="input-control" type="number" step="0.000000001"/>
+			</div>
+
+
+			<button style="background: #463c3c;margin-top: 20px" onclick="" id="coordinatesText2">Update values</button>
+		</form>
+
+	</div>
+
+
+</div>
+
+</div>
+
+
+<script type="text/javascript">
+	modal2 = document.getElementById('ModalConfig');
+	span2 = document.getElementsByClassName("closeConfig")[0];
+	span2.onclick = function() {
+		modal2.style.display = "none";
+	}
+	window.onclick = function(event) {
+		if (event.target == modal2) {
+			modal2.style.display = "none";
+		}
+	}
+</script>
+
+
+
+
+</body>
+
+
+<script type="text/javascript">
+
+	$("#btn2").animate({ 
+		boxShadow: "0px 0px 10px 0px rgb(0, 0, 0)",
+		backgroundColor: 'rgba(0,0,0,0.18)'
+	}); 
+
+	if (navigator.appVersion.indexOf("Win")!=-1) 
+	{
+		$('#titulo').css('margin-top','-10px');
+	}
+
+</script>
+<style type="text/css">
+
+/* The Modal (background) */
+.modalConfig {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 2000; /* Sit on top */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-contentConfig {
+	background-color: #fff;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 400px; /* Could be more or less, depending on screen size */
+	height: 280px;
+	overflow: auto; /* Enable scroll if needed */
+	margin: auto;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+}
+
+/* The Close Button */
+.closeConfig {
+	color: #9ba3b3;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	margin-top: -9px;
+}
+
+.closeConfig:hover,
+.closeConfig:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+</style>
+
+
+
+
+
+
+
+
+<script>
+
+
+
+	function checkInList(id, activar) {
+		if(activar){document.getElementById(id).className = "checked"}
+			else{document.getElementById(id).className = ""}
+
+		}
+
+
+	function openModalCoordinates(e) {
+		if (e.target !== this)
+			return;
+		modal2.style.display = 'block';
+		if(this.id == idAddCoordinates)
+		{
+			$("#coordinatesText1").html("GPS Coordinates to add")
+			$("#coordinatesText2").html("Add values")
+			$("#coordinatesText2").attr("onclick", "sendCoordinates(true)")
+			$("#lat_field").val("")
+			$("#long_field").val("")
+		}
+		else
+		{
+			$("#coordinatesText1").html("GPS Coordinates to update")
+			$("#coordinatesText2").html("Update values")
+			$("#coordinatesText2").attr("onclick", "sendCoordinates(false)")
+
+			$("#lat_field").val(parseFloat($("#"+this.id).html().split("<")[0].split(",")[0]))
+			$("#long_field").val(parseFloat($("#"+this.id).html().split("<")[0].split(",")[1]))
+		}
+		global_id_coordenada = parseInt(this.id)
+
+		
+	}
+
+	ADD_COORDINATES = 1
+	EDIT_COORDINATES = 2
+	global_id_coordenada = -1
+
+	function sendCoordinates(add)
+	{
+		var toSend = {};
+
+		if(add)
+		{
+			toSend['type'] = ADD_COORDINATES
+		}
+		else
+		{
+			toSend['type'] = EDIT_COORDINATES
+			toSend['number'] = global_id_coordenada
+		}
+		
+		toSend['latitude'] = parseFloat($("#lat_field").val())
+		toSend['longitude'] = parseFloat($("#long_field").val())
+
+		mainSocket.send(JSON.stringify(toSend));
+		modal2.style.display = "none";
+	}
+
+
+
+	function sendCoordinates_map(add, id_marker, latlong)
+	{
+		var toSend = {};
+
+		if(add)
+		{
+			toSend['type'] = ADD_COORDINATES
+		}
+		else
+		{
+			toSend['type'] = EDIT_COORDINATES
+			toSend['number'] = id_marker
+		}
+		
+		toSend['latitude'] = parseFloat(latlong['lat'].toFixed(7))
+		toSend['longitude'] = parseFloat(latlong['lng'].toFixed(7))
+
+		mainSocket.send(JSON.stringify(toSend));
+		modal2.style.display = "none";
+	}
+
+
+</script>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	
+	addr = 'ws://'+$(location).attr('href').replace("http://", "").replace("auto", "")+'ws/bgUpdate_autonomous/'
+
+	mainSocket = new WebSocket(addr);
+
+	AUTO_DISABLED = 0
+	AUTO_CHECK_STATUS = 1
+	AUTO_GOING_TO_LANDMARK = 2
+	AUTO_STANDBY = 3
+
+	DELETE_COORDINATES = 0
+
+	firstTime = true
+
+	objective_lat = 0
+	objective_long = 0
+
+	centering = true
+
+	mainSocket.onmessage = function(e) {
+
+		var data = JSON.parse(e.data);
+
+		var landmarksAutonomous = data['landmarksAutonomous']
+		var landmarksReached = data['landmarksReached']
+		var autonomousStatus = data['autonomousStatus']
+
+		var lat_server = data['latitude']
+		var long_server = data['longitude']
+
+		if(centering)
+		{
+			map.setView([ lat_server,long_server ], map.getZoom())
+		}
+
+		var lat_server_start = data['latitude_start']
+		var long_server_start = data['longitude_start']
+
+
+		$("#location_indicator").html(lat_server.toFixed(7)+", "+long_server.toFixed(7))
+
+
+		if (!firstTime){map.removeLayer(markRover);}
+		if (!firstTime && landmarksAutonomous.length>0){map.removeLayer(linea);}
+		if(firstTime){map.setView([ lat_server,long_server ], 19);}
+		firstTime = false
+
+		markRover = L.marker([ lat_server,long_server ], {draggable: false, icon: roverIcon}, ).addTo(map);
+
+
+		
+
+
+		
+		
+
+		
+
+
+
+		if(autonomousStatus == AUTO_DISABLED)
+		{
+			$("#stateIndicator").html("Disabled")
+			$("#stateIndicator").css({'color':'#c72d2d'})
+
+			$("#but_start").attr("disabled",false)
+			$("#but_continue").attr("disabled",true)
+
+
+		}
+		else if(autonomousStatus == AUTO_CHECK_STATUS)
+		{
+			$("#stateIndicator").html("Check Rover Status")
+			$("#stateIndicator").css({'color':'#c72d2d'})
+
+			$("#but_start").attr("disabled",true)
+			$("#but_continue").attr("disabled",true)
+
+
+		}
+		else if(autonomousStatus == AUTO_GOING_TO_LANDMARK)
+		{
+			$("#stateIndicator").html("Going to next coordinates")
+			$("#stateIndicator").css({'color':'#159a15'})
+
+			$("#but_start").attr("disabled",true)
+			$("#but_continue").attr("disabled",true)
+
+
+
+
+		}
+		else if(autonomousStatus == AUTO_STANDBY)
+		{
+			$("#stateIndicator").html("Waiting to Continue")
+			$("#stateIndicator").css({'color':'#E28338'})
+
+			$("#but_start").attr("disabled",true)
+			$("#but_continue").attr("disabled",false)
+
+
+		}
+
+		updateAutonomous = data['updateAutonomous']
+		if(updateAutonomous)
+		{
+			markerGroup.clearLayers();
+			poliGroup.clearLayers();
+			document.getElementById('myUL').innerHTML = ""
+			for(var i=0;i<landmarksAutonomous.length;i++)
+			{
+
+				document.getElementById('myUL').innerHTML+="<li id='"+i+"'>"+landmarksAutonomous[i]+"</li>"
+
+
+				if(i < landmarksReached.length && (autonomousStatus == AUTO_GOING_TO_LANDMARK || autonomousStatus == AUTO_STANDBY))
+				{
+					icon_SEL = greenIcon
+				}
+				else if (i == landmarksReached.length && (autonomousStatus == AUTO_GOING_TO_LANDMARK  || autonomousStatus == AUTO_STANDBY))
+				{
+					icon_SEL = blueIcon
+				}
+				else
+				{
+					icon_SEL = redIcon
+				}
+
+
+				if(autonomousStatus == AUTO_STANDBY && icon_SEL == blueIcon)
+				{
+					icon_SEL = yellowIcon
+				}
+
+
+				mark = L.marker(landmarksAutonomous[i], {draggable: autonomousStatus == AUTO_DISABLED, icon: icon_SEL}, ).addTo(markerGroup);
+				mark._icon.id = "marker"+i
+
+				mark.on('dragend', function(event){
+					var mark = event.target;
+					var position = mark.getLatLng();
+
+					sendCoordinates_map(false, parseFloat(mark._icon.id.replace("marker", "")), position)
+				});
+				
+
+			}
+
+			if (autonomousStatus == AUTO_GOING_TO_LANDMARK || autonomousStatus == AUTO_STANDBY)
+			{
+				polyA = landmarksAutonomous.slice(0, landmarksReached.length)
+				polyB = landmarksAutonomous.slice(landmarksReached.length-1, landmarksReached.length+1)
+				polyC = landmarksAutonomous.slice(landmarksReached.length, landmarksAutonomous.length)
+
+				L.polyline(polyA, {color:'green'}).addTo(poliGroup);
+
+				if (autonomousStatus == AUTO_GOING_TO_LANDMARK)
+				{
+					L.polyline(polyB, {color:'blue'}).addTo(poliGroup);
+				}
+				else
+				{
+					L.polyline(polyB, {color:'green'}).addTo(poliGroup);
+				}
+
+				L.polyline(polyC, {color:'grey'}).addTo(poliGroup);
+			}
+			else
+			{
+				L.polyline(landmarksAutonomous, {color:'grey'}).addTo(poliGroup);
+			}
+
+
+
+			if (landmarksAutonomous.length>0)
+			{
+				objective_lat = landmarksAutonomous[0][0]
+				objective_long =landmarksAutonomous[0][1]
+			}
+			else
+			{
+				objective_lat = lat_server_start
+				objective_long = long_server_start
+			}
+
+			var myNodelist = document.getElementsByTagName("LI");
+			var i;
+			for (i = 0; i < myNodelist.length && autonomousStatus == AUTO_DISABLED ; i++) {
+				var span = document.createElement("SPAN");
+				var txt = document.createTextNode("\u00D7");
+				span.className = "close";
+				span.appendChild(txt);
+				myNodelist[i].appendChild(span);
+			}
+
+
+
+			if(autonomousStatus == AUTO_DISABLED){document.getElementById('myUL').innerHTML+="<li style='color:gray' id='"+landmarksAutonomous.length+"'>+ Add new coordinate</li>"}
+				idAddCoordinates = landmarksAutonomous.length
+
+
+			for (var j = 0;j <= myNodelist.length && autonomousStatus == AUTO_DISABLED; j++)
+			{
+				$('#'+j).on('click', openModalCoordinates)
+
+
+			}
+
+
+
+			for (var k = 0; (k<landmarksReached.length && autonomousStatus == AUTO_GOING_TO_LANDMARK)||(k<=landmarksReached.length && autonomousStatus == AUTO_STANDBY); k++)
+			{
+				checkInList(k, true)
+			}
+
+
+
+
+			var close = document.getElementsByClassName("close");
+			var i;
+			for (i = 0; i < close.length; i++) {
+				close[i].onclick = function() {
+
+					var toSend = {};
+
+					toSend['type'] = DELETE_COORDINATES
+					toSend['number'] = parseInt(this.parentElement.id)
+
+					mainSocket.send(JSON.stringify(toSend));
+
+
+				}
+			}
+
+
+		}
+
+		if(landmarksReached.length>=1 && (autonomousStatus == AUTO_GOING_TO_LANDMARK || autonomousStatus == AUTO_STANDBY))
+		{
+			linea = L.polyline([ [lat_server_start, long_server_start] , [objective_lat, objective_long] ], {color:'green'}).addTo(poliGroup);
+		}
+		else if(landmarksReached.length==0 && autonomousStatus == AUTO_GOING_TO_LANDMARK)
+		{
+			linea = L.polyline([ [lat_server_start, long_server_start] , [objective_lat, objective_long] ], {color:'blue'}).addTo(poliGroup);
+		}
+		else if(landmarksReached.length==0 && autonomousStatus == AUTO_STANDBY)
+		{
+			linea = L.polyline([ [lat_server_start, long_server_start] , [objective_lat, objective_long] ], {color:'green'}).addTo(poliGroup);
+		}
+		else
+		{
+			linea = L.polyline([ [lat_server_start, long_server_start] , [objective_lat, objective_long] ], {color:'gray'}).addTo(poliGroup);
+		}
+
+
+	}
+
+
+	
+
+
+	function handdleCenter() {
+		centering = !centering;
+
+		if(centering)
+		{
+			$("#img_center").attr('src', "{% static 'img/map_center_check.png' %}")
+		}
+		else
+		{
+			$("#img_center").attr('src', "{% static 'img/map_center.png' %}")
+		}
+
+
+	}
+
+
+</script>
+
+
+</html>

@@ -1,0 +1,165 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ROBOCOL - Geoscientific Toolkit</title>
+
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/jquery.animate-shadow-min.js' %}"></script>
+	<script src="{% static 'js/jquery.color-2.1.2.min.js' %}"></script>
+	
+
+	<style type="text/css">
+	
+	label{
+		font-family: Helvetica;
+	}
+
+	
+
+</style>
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+
+.form-style-10 input {
+	display: block;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width: 49%;
+	padding: 6px;
+	font-size: 16px;
+	font-family: Helvetica;
+	border-radius: 6px;
+	-webkit-border-radius:6px;
+	-moz-border-radius:6px;
+	border: 2px solid #fff;
+	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+	-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+	-webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+}
+.form-style-10 label{
+	display: block;
+	font: 16px Arial, Helvetica, sans-serif;
+	color: #fff;
+	margin-bottom: 15px;
+	width: 220px;
+}
+</style>
+
+
+<style type="text/css">
+.slider {
+	-webkit-appearance: none;
+	width: 220px;
+	background: #bbbbbb;
+	outline: none;
+	opacity: 0.7;
+}
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	background: #000;
+	cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	background: #1a6cb5;
+	cursor: pointer;
+}
+</style>
+
+
+
+
+
+
+</head>
+
+<style type="text/css">
+@font-face {
+	font-family: 'RoboFont';
+	src: url('{% static 'fonts/Bank Gothic Medium.ttf' %}');
+}
+</style>
+
+
+<body scroll="no" style="background: linear-gradient(#ffffff, #000000); margin: 0;height: 100vh;overflow: hidden;">
+
+
+	<div style="position: absolute;top:0;left: 0;right: 0">
+		<label id="titulo" style="display: block;margin-top: 72px;margin-bottom: 10px;font-family: RoboFont;font-size: 100px;color: rgb(60, 49, 49);text-align: center;">ROBOCOL</label>
+	</div>
+
+
+	<div style="position: absolute;width: 100vw;z-index: 4;left: 0;bottom: 0;border-top: 2.5px solid rgb(107, 107, 107);background-color: rgba(255, 255, 255, 0.28);padding-bottom: 14px;height: 65px;padding: 5px; display: flex;" id="bottom_banner">
+
+		<div id="btn1" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/'">
+
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Traction</label>
+
+		</div>
+
+		<div id="btn2" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/auto'">
+
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Autonomous Control</label>
+
+		</div>
+
+		<div id="btn3" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/roboticArm'">
+
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Robotic Arm</label>
+
+		</div>
+
+		<div id="btn4" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/geo'">
+
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Geoscientific Toolkit</label>
+
+		</div>
+
+		<div id="btn5" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/status'">
+
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Rover Status</label>
+
+		</div>
+
+
+	</div>
+
+
+
+
+</body>
+
+
+<script type="text/javascript">
+
+	$("#btn4").animate({ 
+		boxShadow: "0px 0px 10px 0px rgb(0, 0, 0)",
+		backgroundColor: 'rgba(0,0,0,0.18)'
+	}); 
+
+	if (navigator.appVersion.indexOf("Win")!=-1) 
+	{
+		$('#titulo').css('margin-top','-10px');
+	}
+
+</script>
+
+
+
+</html>

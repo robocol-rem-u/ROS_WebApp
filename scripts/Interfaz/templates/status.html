@@ -1,0 +1,780 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ROBOCOL - Rover Status</title>
+
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/jquery.animate-shadow-min.js' %}"></script>
+	<script src="{% static 'js/jquery.color-2.1.2.min.js' %}"></script>
+	
+
+	<style type="text/css">
+	
+	label{
+		font-family: Helvetica;
+	}
+
+
+	.button_disabled_motors{
+		background:#cc6868;
+		border:0;
+		color:#fff;
+		padding:3px;
+		font-size:20px;
+		width:100%;
+		display:block;
+		cursor:pointer;
+		font-family: Helvetica;
+		border-radius: 20px;
+		margin-top: 5px
+	}
+	.button_disabled_motors:active{
+		background-color: #944949;
+	}
+
+
+	.button_enabled_motors{
+		background:#449850;
+		border:0;
+		color:#fff;
+		padding:3px;
+		font-size:20px;
+		width:100%;
+		display:block;
+		cursor:pointer;
+		font-family: Helvetica;
+		border-radius: 20px;
+		margin-top: 5px
+	}
+	.button_enabled_motors:active{
+		background-color: #335a39;
+	}
+
+
+	input:focus,input:active,button:focus,button:active{
+		outline:none;
+	}
+	
+
+	
+
+</style>
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+
+.form-style-10 input {
+	display: block;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width: 49%;
+	padding: 6px;
+	font-size: 16px;
+	font-family: Helvetica;
+	border-radius: 6px;
+	-webkit-border-radius:6px;
+	-moz-border-radius:6px;
+	border: 2px solid #fff;
+	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+	-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+	-webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+}
+.form-style-10 label{
+	display: block;
+	font: 16px Arial, Helvetica, sans-serif;
+	color: #fff;
+	margin-bottom: 15px;
+	width: 220px;
+}
+</style>
+
+
+<style type="text/css">
+.slider {
+	-webkit-appearance: none;
+	width: 220px;
+	background: #bbbbbb;
+	outline: none;
+	opacity: 0.7;
+}
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	background: #000;
+	cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	background: #1a6cb5;
+	cursor: pointer;
+}
+</style>
+
+
+
+<style type="text/css">
+:root {
+	--background-color: rgb(50, 50, 50);
+	--acid-height: 0;
+	--display-charging: "none";
+}
+
+.cell {
+	width: 285px;
+	height: 114px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	position: absolute;
+	margin:auto;
+	left: 0;
+	right: 0;
+}
+
+.percentage {
+	font-size: 100%;
+	font-weight: bold;
+	color: white;
+	margin-top: 15px;
+	font-family: Helvetica
+}
+.percentage i {
+	margin-right: 6px;
+	display: var(--display-charging);
+}
+
+.info {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	margin: 5px;
+	font-size: 80%;
+	color: rgba(255, 255, 255, 0.5);
+	transition: .2s ease-in-out;
+}
+.info:hover {
+	color: white;
+}
+.info i {
+	margin-right: 5px;
+}
+.info a {
+	color: inherit;
+}
+
+.battery {
+	position: relative;
+	width: 250px;
+	height: 70px;
+	border: 4px solid #FFF;
+	border-radius: 25px;
+}
+.battery:after {
+	position: absolute;
+	top: 20px;
+	right: -14px;
+	width: 10px;
+	height: 30px;
+	background-color: #FFF;
+	border-radius: 0px 5px 5px 0px;
+	content: '';
+}
+
+.acid-container {
+	overflow: hidden;
+	height: calc(100% - 8px);
+	border-radius: 18px;
+	margin: 4px;
+}
+.acid-container .acid {
+	height: 250px;
+	display: flex;
+	flex-direction: column;
+	flex-flow: column-reverse;
+}
+.acid-container .acid .fill {
+	background: white;
+	height: var(--acid-height);
+	width: 100%;
+	flex-shrink: 0;
+	transition: height 2s ease-in-out, background-color .5s ease-out;
+}
+.acid-container .acid .waves {
+	display: block;
+	width: 100%;
+	height: 10px;
+	margin-bottom: -1px;
+
+}
+.acid-container .acid .waves .parallax > use {
+	-webkit-animation: move-forever 12s linear infinite;
+	animation: move-forever 12s linear infinite;
+
+}
+.acid-container .acid .waves .parallax > use:nth-child(1) {
+	-webkit-animation-delay: -2s;
+	animation-delay: -2s;
+	fill: rgba(255, 255, 255, 0.6);
+	
+}
+.acid-container .acid .waves .parallax > use:nth-child(2) {
+	-webkit-animation-delay: -2s;
+	animation-delay: -2s;
+	-webkit-animation-duration: 5s;
+	animation-duration: 5s;
+	fill: rgba(255, 255, 255, 0.8);
+
+}
+.acid-container .acid .waves .parallax > use:nth-child(3) {
+	-webkit-animation-delay: -4s;
+	animation-delay: -4s;
+	-webkit-animation-duration: 3s;
+	animation-duration: 3s;
+	fill: white;
+
+}
+@-webkit-keyframes move-forever {
+	0% {
+		-webkit-transform: translate(-90px, 0%);
+		transform: translate(-90px, 0%);
+	}
+	100% {
+		-webkit-transform: translate(85px, 0%);
+		transform: translate(85px, 0%);
+	}
+}
+@keyframes move-forever {
+	0% {
+		-webkit-transform: translate(-90px, 0%);
+		transform: translate(-90px, 0%);
+	}
+	100% {
+		-webkit-transform: translate(85px, 0%);
+		transform: translate(85px, 0%);
+	}
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<style type="text/css">
+@font-face {
+	font-family: 'RoboFont';
+	src: url('{% static 'fonts/Bank Gothic Medium.ttf' %}');
+}
+</style>
+
+
+<body scroll="no" style="background: linear-gradient(#ffffff, #000000); margin: 0;height: 100vh;overflow: hidden;">
+
+
+	<div style="position: absolute;top:0;left: 0;right: 0">
+		<label id="titulo" style="display: block;margin-top: 72px;margin-bottom: 10px;font-family: RoboFont;font-size: 100px;color: rgb(60, 49, 49);text-align: center;">ROBOCOL</label>
+	</div>
+
+
+
+	<div id="state_tests" style="z-index: 4;height: 470px;width: 710px;position: absolute;padding:29px;top: 0;bottom: 0;left: 50px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);background: #ffffff08;margin: auto;">
+
+		<img src="{% static 'img/Rover_icon_status.png' %}" style="position: absolute;left: 0;right: 0;top: 0;bottom: 0;margin:auto;width: auto;height: 422px">
+
+		<label id="temperature" style="position: absolute;left: 0;right: 0;top: 165px;bottom: 0;margin:auto;display: block;text-align: center;color: white">Temperature<br>0 &degC</label>
+
+
+		<div id="state_tests" style="z-index: 4;height: 80px;width: 150px;position: absolute;padding:9px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.41);background: #91b0d017;margin: auto;top: 55px;left: 25px">
+
+			<label id="L0_speed" style="text-align: center;display: block;">Speed: 0 RPM</label>
+			<label id="L0_current" style="margin-top: 10px;display: block;text-align: center;">Current: 0 A</label>
+
+			<button id="B2" class="button_enabled_motors">Enabled</button>
+
+		</div>
+
+		<div id="state_tests" style="z-index: 4;height: 80px;width: 150px;position: absolute;padding:9px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.41);background: #91b0d017;margin: auto;top: 189px;left: 25px">
+
+			<label id="L1_speed" style="text-align: center;display: block;">Speed: 0 RPM</label>
+			<label id="L1_current" style="margin-top: 10px;display: block;text-align: center;">Current: 0 A</label>
+
+			<button id="B1" class="button_enabled_motors">Enabled</button>
+			
+		</div>
+
+		<div id="state_tests" style="z-index: 4;height: 80px;width: 150px;position: absolute;padding:9px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.41);background: #91b0d017;margin: auto;top: 380px;left: 25px">
+
+			<label id="L2_speed" style="text-align: center;display: block;">Speed: 0 RPM</label>
+			<label id="L2_current" style="margin-top: 10px;display: block;text-align: center;">Current: 0 A</label>
+
+			<button id="B0" class="button_enabled_motors">Enabled</button>
+			
+		</div>
+
+
+		<div id="state_tests" style="z-index: 4;height: 80px;width: 150px;position: absolute;padding:9px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.41);background: #91b0d017;margin: auto;top: 55px;right: 25px">
+
+			<label id="R0_speed" style="text-align: center;display: block;">Speed: 0 RPM</label>
+			<label id="R0_current" style="margin-top: 10px;display: block;text-align: center;">Current: 0 A</label>
+
+			<button id="B5" class="button_enabled_motors">Enabled</button>
+
+		</div>
+
+		<div id="state_tests" style="z-index: 4;height: 80px;width: 150px;position: absolute;padding:9px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.41);background: #91b0d017;margin: auto;top: 189px;right: 25px">
+
+			<label id="R1_speed" style="text-align: center;display: block;">Speed: 0 RPM</label>
+			<label id="R1_current" style="margin-top: 10px;display: block;text-align: center;">Current: 0 A</label>
+
+			<button id="B4" class="button_enabled_motors">Enabled</button>
+			
+		</div>
+
+		<div id="state_tests" style="z-index: 4;height: 80px;width: 150px;position: absolute;padding:9px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.41);background: #91b0d017;margin: auto;top: 380px;right: 25px">
+
+			<label id="R2_speed" style="text-align: center;display: block;">Speed: 0 RPM</label>
+			<label id="R2_current" style="margin-top: 10px;display: block;text-align: center;">Current: 0 A</label>
+
+			<button id="B3" class="button_enabled_motors">Enabled</button>
+			
+		</div>
+
+	</div>
+
+
+	<div id="batteries" style="z-index: 4;height: 470px;width: calc(100vw - 818px - 108px - 50px);position: absolute;padding:29px;top: 0;bottom: 0;right: 50px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);background: #ffffff08;margin: auto;">
+
+		<div class="cell" style="top:20px">
+
+			<div id="battery" class="battery">
+				<div class="acid-container">
+					<label style="color: white;font-size: 20px;position: absolute;left: 86px;top: 22px;">Steppers</label>
+					<div class="acid">
+
+						<div id="level0" class="fill"></div>
+
+						<svg class="waves"
+						xmlns="http://www.w3.org/2000/svg"
+						xmlns:xlink="http://www.w3.org/1999/xlink"
+						viewBox="0 24 150 28"
+						preserveAspectRatio="none">
+						<defs>
+							<path id="gentle-wave"
+							d="M-160 44c30 0 
+							58-18 88-18s
+							58 18 88 18 
+							58-18 88-18 
+							58 18 88 18
+							v44h-352z" />
+						</defs>
+						<g class="parallax">
+							<use xlink:href="#gentle-wave" x="50" y="0" fill="#4579e2" id="ola1_0"/>
+							<use xlink:href="#gentle-wave" x="50" y="3" fill="#3461c1" id="ola2_0"/>
+							<use xlink:href="#gentle-wave" x="50" y="6" fill="#2d55aa" id="ola3_0"/>  
+						</g>
+					</svg>
+
+				</div>
+
+			</div>
+		</div>
+
+		<div class="percentage">
+			<i id="icon" class="fas fa-plug"></i><span id="percentage0">0</span> V
+		</div>
+
+
+	</div>
+
+
+
+
+
+	<div class="cell" style="top:145px">
+
+		<div id="battery" class="battery">
+			<div class="acid-container">
+				<label style="color: white;font-size: 20px;position: absolute;left: 57px;top: 22px;">Digital Systems</label>
+				<div class="acid">
+
+					<div id="level1" class="fill"></div>
+
+					<svg class="waves"
+					xmlns="http://www.w3.org/2000/svg"
+					xmlns:xlink="http://www.w3.org/1999/xlink"
+					viewBox="0 24 150 28"
+					preserveAspectRatio="none">
+					<defs>
+						<path id="gentle-wave"
+						d="M-160 44c30 0 
+						58-18 88-18s
+						58 18 88 18 
+						58-18 88-18 
+						58 18 88 18
+						v44h-352z" />
+					</defs>
+					<g class="parallax">
+						<use xlink:href="#gentle-wave" x="50" y="0" fill="#4579e2" id="ola1_1"/>
+						<use xlink:href="#gentle-wave" x="50" y="3" fill="#3461c1" id="ola2_1"/>
+						<use xlink:href="#gentle-wave" x="50" y="6" fill="#2d55aa" id="ola3_1"/>  
+					</g>
+				</svg>
+
+			</div>
+
+		</div>
+	</div>
+
+	<div class="percentage">
+		<i id="icon" class="fas fa-plug"></i><span id="percentage1">0</span> V
+	</div>
+
+
+</div>
+
+
+<div class="cell" style="top:270px">
+
+	<div id="battery" class="battery">
+		<div class="acid-container">
+			<label style="color: white;font-size: 20px;position: absolute;left: 88px;top: 22px;">Traction</label>
+			<div class="acid">
+
+
+				<div id="level2" class="fill"></div>
+
+				<svg class="waves"
+				xmlns="http://www.w3.org/2000/svg"
+				xmlns:xlink="http://www.w3.org/1999/xlink"
+				viewBox="0 24 150 28"
+				preserveAspectRatio="none">
+				<defs>
+					<path id="gentle-wave"
+					d="M-160 44c30 0 
+					58-18 88-18s
+					58 18 88 18 
+					58-18 88-18 
+					58 18 88 18
+					v44h-352z" />
+				</defs>
+				<g class="parallax">
+					<use xlink:href="#gentle-wave" x="50" y="0" fill="#4579e2" id="ola1_2"/>
+					<use xlink:href="#gentle-wave" x="50" y="3" fill="#3461c1" id="ola2_2"/>
+					<use xlink:href="#gentle-wave" x="50" y="6" fill="#2d55aa" id="ola3_2"/>  
+				</g>
+			</svg>
+
+		</div>
+
+	</div>
+</div>
+
+<div class="percentage">
+	<i id="icon" class="fas fa-plug"></i><span id="percentage2">0</span> V
+</div>
+
+
+</div>
+
+
+<div class="cell" style="top:395px">
+
+	<div id="battery" class="battery">
+		<div class="acid-container">
+			<label style="color: white;font-size: 20px;position: absolute;left: 65px;top: 22px;">Access Point</label>
+			<div class="acid">
+
+
+				<div id="level3" class="fill"></div>
+
+				<svg class="waves"
+				xmlns="http://www.w3.org/2000/svg"
+				xmlns:xlink="http://www.w3.org/1999/xlink"
+				viewBox="0 24 150 28"
+				preserveAspectRatio="none">
+				<defs>
+					<path id="gentle-wave"
+					d="M-160 44c30 0 
+					58-18 88-18s
+					58 18 88 18 
+					58-18 88-18 
+					58 18 88 18
+					v44h-352z" />
+				</defs>
+				<g class="parallax">
+					<use xlink:href="#gentle-wave" x="50" y="0" fill="#4579e2" id="ola1_3"/>
+					<use xlink:href="#gentle-wave" x="50" y="3" fill="#3461c1" id="ola2_3"/>
+					<use xlink:href="#gentle-wave" x="50" y="6" fill="#2d55aa" id="ola3_3"/>  
+				</g>
+			</svg>
+
+		</div>
+
+	</div>
+</div>
+
+<div class="percentage">
+	<i id="icon" class="fas fa-plug"></i><span id="percentage3">0</span> V
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="position: absolute;width: 100vw;z-index: 4;left: 0;bottom: 0;border-top: 2.5px solid rgb(107, 107, 107);background-color: rgba(255, 255, 255, 0.28);padding-bottom: 14px;height: 65px;padding: 5px; display: flex;" id="bottom_banner">
+
+	<div id="btn1" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/'">
+
+		<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Traction</label>
+
+	</div>
+
+	<div id="btn2" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/auto'">
+
+		<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Autonomous Control</label>
+
+	</div>
+
+	<div id="btn3" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/roboticArm'">
+
+		<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Robotic Arm</label>
+
+	</div>
+
+	<div id="btn4" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/geo'">
+
+		<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Geoscientific Toolkit</label>
+
+	</div>
+
+	<div id="btn5" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/status'">
+
+		<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Rover Status</label>
+
+	</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+</body>
+
+
+<script type="text/javascript">
+
+	$("#btn5").animate({ 
+		boxShadow: "0px 0px 10px 0px rgb(0, 0, 0)",
+		backgroundColor: 'rgba(0,0,0,0.18)'
+	}); 
+
+</script>
+
+<script type="text/javascript">
+	
+
+	function refreshLevel(level, bat) {
+		level = level + 2.6
+		document.getElementById("level"+bat).style.setProperty('--acid-height', (level * document.getElementById("battery").clientHeight) + "px");
+		level = level - 2.6
+		if (level < 0.25) {
+			//document.body.style.setProperty('--background-color', "#c0392b");
+			color = 'rgba(192, 57, 43'
+			$("#ola1_"+bat).css({'fill':color+', 0.3)'})
+			$("#ola2_"+bat).css({'fill':color+', 0.5)'})
+			$("#ola3_"+bat).css({'fill':color+')'})
+			$("#level"+bat).css({'background':color+')'})
+
+		} else if (level < 0.5) {
+			//document.body.style.setProperty('--background-color', "#f39c12");
+			color = 'rgba(243, 156, 18'
+			$("#ola1_"+bat).css({'fill':color+', 0.3)'})
+			$("#ola2_"+bat).css({'fill':color+', 0.5)'})
+			$("#ola3_"+bat).css({'fill':color+')'})
+			$("#level"+bat).css({'background':color+')'})
+		} else {
+			//document.body.style.setProperty('--background-color', "#27ae60");
+			color = 'rgba(39, 174, 96'
+			$("#ola1_"+bat).css({'fill':color+', 0.3)'})
+			$("#ola2_"+bat).css({'fill':color+', 0.5)'})
+			$("#ola3_"+bat).css({'fill':color+')'})
+			$("#level"+bat).css({'background':color+')'})
+		}
+
+		
+
+	}
+
+	//refreshLevel(0.9,0)
+	//refreshLevel(0.4,1)
+	//refreshLevel(0.2,2)
+
+</script>
+
+
+<script type="text/javascript">
+	
+	function changeButtonStatus(nBut, state) {
+
+		if (state==false)
+		{
+			$("#B"+nBut).attr('class', 'button_disabled_motors');
+			$("#B"+nBut).html("Disabled")
+			$("#B"+nBut).attr('onclick', 'enviarToggle(this.id, true)');
+			
+		}
+		else
+		{
+			$("#B"+nBut).attr('class', 'button_enabled_motors');
+			$("#B"+nBut).html("Enabled")
+			$("#B"+nBut).attr('onclick', 'enviarToggle(this.id, false)');
+		}
+
+	}
+
+</script>
+
+
+
+
+<script type="text/javascript">
+
+	addr = 'ws://'+$(location).attr('href').replace("http://", "").replace("status", "")+'ws/bgUpdate_status/'
+
+	mainSocket = new WebSocket(addr);
+
+	mainSocket.onmessage = function(e) {
+
+		var data = JSON.parse(e.data);
+
+		$("#L0_speed").html('Speed: '+data['L0_speed']+" RPM")
+		$("#L1_speed").html('Speed: '+data['L1_speed']+" RPM")
+		$("#L2_speed").html('Speed: '+data['L2_speed']+" RPM")
+		$("#R0_speed").html('Speed: '+data['R0_speed']+" RPM")
+		$("#R1_speed").html('Speed: '+data['R1_speed']+" RPM")
+		$("#R2_speed").html('Speed: '+data['R2_speed']+" RPM")
+
+		$("#L0_current").html('Current: '+data['L0_current'].toFixed(2)+" A")
+		$("#L1_current").html('Current: '+data['L1_current'].toFixed(2)+" A")
+		$("#L2_current").html('Current: '+data['L2_current'].toFixed(2)+" A")
+		$("#R0_current").html('Current: '+data['R0_current'].toFixed(2)+" A")
+		$("#R1_current").html('Current: '+data['R1_current'].toFixed(2)+" A")
+		$("#R2_current").html('Current: '+data['R2_current'].toFixed(2)+" A")
+
+		if(data['L0_current']>CURRENT_TH){$("#L0_current").css({'color':'red'})}else{$("#L0_current").css({'color':'black'})}
+		if(data['L1_current']>CURRENT_TH){$("#L1_current").css({'color':'red'})}else{$("#L1_current").css({'color':'black'})}
+		if(data['L2_current']>CURRENT_TH){$("#L2_current").css({'color':'red'})}else{$("#L2_current").css({'color':'black'})}
+		if(data['R0_current']>CURRENT_TH){$("#R0_current").css({'color':'red'})}else{$("#R0_current").css({'color':'black'})}
+		if(data['R1_current']>CURRENT_TH){$("#R1_current").css({'color':'red'})}else{$("#R1_current").css({'color':'black'})}
+		if(data['R2_current']>CURRENT_TH){$("#R2_current").css({'color':'red'})}else{$("#R2_current").css({'color':'black'})}
+
+		$("#percentage0").html(data['bat0'].toFixed(2))
+		$("#percentage1").html(data['bat1'].toFixed(2))
+		$("#percentage2").html(data['bat2'].toFixed(2))
+
+		if(data['bat3']>1)
+		{
+			data['bat3'] = data['bat3']-data['bat1']
+			$("#percentage3").html((data['bat3']).toFixed(2))
+		}
+		else
+		{
+			$("#percentage3").html((data['bat3']).toFixed(2))
+		}
+
+		data['bat0'] = (data['bat0']-19.2)/6
+		data['bat1'] = (data['bat1']-19.2)/6
+		data['bat2'] = (data['bat2']-19.2)/6
+		data['bat3'] = (data['bat3']-19.2)/6
+
+
+		refreshLevel(data['bat0'],0)
+		refreshLevel(data['bat1'],1)
+		refreshLevel(data['bat2'],2)
+		refreshLevel(data['bat3'],3)
+
+		$("#temperature").html('Temperature<br>'+data['rover_temp']+' &degC')
+		if(data['rover_temp']>TEMP_TH){$("#temperature").css({'color':'#ff5656'})}else{$("#temperature").css({'color':'white'})}
+
+
+		changeButtonStatus(0, data['L0_status'])
+		changeButtonStatus(1, data['L1_status'])
+		changeButtonStatus(2, data['L2_status'])
+		changeButtonStatus(3, data['R0_status'])
+		changeButtonStatus(4, data['R1_status'])
+		changeButtonStatus(5, data['R2_status'])
+
+
+	}
+
+	TOGGLE_MOT_STATUS = 0
+	CURRENT_TH = 10
+	TEMP_TH = 50
+
+	function enviarToggle(id_but, new_state) {
+		var toSend = {};
+		toSend['type'] = TOGGLE_MOT_STATUS
+
+		toSend['id'] = parseInt(id_but.replace("B", ""))
+		toSend['state'] = new_state
+
+		mainSocket.send(JSON.stringify(toSend));
+	}
+
+	if (navigator.appVersion.indexOf("Win")!=-1) 
+	{
+		$('#titulo').css('margin-top','-10px');
+	}
+
+
+
+</script>
+
+
+</html>

@@ -1,0 +1,425 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ROBOCOL - Traction</title>
+
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/jquery.animate-shadow-min.js' %}"></script>
+	<script src="{% static 'js/jquery.color-2.1.2.min.js' %}"></script>
+	
+
+	<style type="text/css">
+	#container {
+		width		: 100vw;
+		height		: 100vh;
+		overflow	: hidden;
+		padding		: 0;
+		margin		: 0;
+		-webkit-user-select	: none;
+		-moz-user-select	: none;
+		position: absolute;
+	}
+	label{
+		font-family: Helvetica;
+	}
+
+	.custom-radios div {
+		display: inline-block;
+	}
+	.custom-radios input[type="radio"] {
+		display: none;
+	}
+	.custom-radios input[type="radio"] + label {
+		color: #333;
+		font-family: Arial, sans-serif;
+		font-size: 14px;
+	}
+	.custom-radios input[type="radio"] + label span {
+		display: inline-block;
+		width: 40px;
+		height: 40px;
+		margin: -1px 4px 0 0;
+		vertical-align: middle;
+		cursor: pointer;
+		border-radius: 50%;
+		border: 2px solid #FFFFFF;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+		background-repeat: no-repeat;
+		background-position: center;
+		text-align: center;
+		line-height: 44px;
+	}
+	.custom-radios input[type="radio"] + label span img {
+		opacity: 0;
+		transition: all .3s ease;
+	}
+	.custom-radios input[type="radio"]#color-1 + label span {
+		background-color: #2ecc71;
+	}
+	.custom-radios input[type="radio"]#color-2 + label span {
+		background-color: #3498db;
+	}
+	.custom-radios input[type="radio"]#color-3 + label span {
+		background-color: #f1c40f;
+	}
+	.custom-radios input[type="radio"]#color-4 + label span {
+		background-color: #e74c3c;
+	}
+	.custom-radios input[type="radio"]:checked + label span img {
+		opacity: 1;
+	}
+
+</style>
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+
+.form-style-10 input {
+	display: block;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width: 49%;
+	padding: 6px;
+	font-size: 16px;
+	font-family: Helvetica;
+	border-radius: 6px;
+	-webkit-border-radius:6px;
+	-moz-border-radius:6px;
+	border: 2px solid #fff;
+	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+	-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+	-webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+}
+.form-style-10 label{
+	display: block;
+	font: 16px Arial, Helvetica, sans-serif;
+	color: #fff;
+	margin-bottom: 15px;
+	width: 220px;
+}
+</style>
+
+
+<style type="text/css">
+.slider {
+	-webkit-appearance: none;
+	width: 220px;
+	background: #bbbbbb;
+	outline: none;
+	opacity: 0.7;
+}
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	background: #000;
+	cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	background: #1a6cb5;
+	cursor: pointer;
+}
+</style>
+
+
+
+
+
+
+</head>
+
+<style type="text/css">
+@font-face {
+	font-family: 'RoboFont';
+	src: url('{% static 'fonts/Bank Gothic Medium.ttf' %}');
+}
+</style>
+
+
+<body scroll="no" style="background: linear-gradient(#ffffff, #000000); margin: 0;height: 100vh;overflow: hidden;">
+
+	<div id="container" style="z-index: 3"></div>
+
+	<div style="position: absolute;top:0;left: 0;right: 0">
+		<label id="titulo" style="display: block;margin-top: 72px;margin-bottom: 10px;font-family: RoboFont;font-size: 100px;color: rgb(60, 49, 49);text-align: center;">ROBOCOL</label>
+	</div>
+
+	<div id="joystick_circle" style="position: absolute;display:inline-block;background: #88859638; height: 400px;width: 400px;border-radius: 300px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);top: 25vh;right: 6vw">
+	</div>
+
+
+
+	<div id="telemetry" style="z-index: 4;height: calc(470px);width: calc(55vw - 50px);position: absolute;padding:2%;top: 0;bottom: 0;left: 50px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);background: #ffffff08;margin: auto;">
+
+
+
+
+		<label style="font-weight: 100; font-size: 28px;margin-bottom: 10px;display: inline-block;">Rover Telemetry:</label>
+
+		<div class="custom-radios" style="text-align: center;margin-top: 15px;margin-bottom: 30px">
+			<div>
+				<input type="radio" id="color-1" name="color" value="color-1" checked onchange="cambiarCom(false)">
+				<label for="color-1">
+					<span>
+						<img src="{% static 'img/check-icn.svg' %}" />
+					</span>
+				</label>
+			</div>
+			<label style="font-family:Helvetica;font-size:30px;display:inline-block;vertical-align: middle;margin-right:50px">Xbee S8</label>
+			<div>
+				<input type="radio" id="color-2" name="color" value="color-2" onchange="cambiarCom(true)">
+				<label for="color-2">
+					<span>
+						<img src="{% static 'img/check-icn.svg' %}" />
+					</span>
+				</label>
+			</div>
+			<div>
+				<label style="font-family:Helvetica;font-size:30px;display:inline-block;vertical-align: middle;">Wi-Fi Backup</label>
+			</div>
+
+			<br>
+		</div>
+
+		<div style="text-align: center">
+			<div class="slidecontainer nt" style="margin-bottom: 35px;">
+				<label style="font-size: 20px;font-family: Helvetica;display:inherit;margin-left: -215px">Sensitivity</label>
+				<input type="range" min="1" max="250" value="70" class="slider" id="sensibilidad" oninput="$('#sensibilidad_value').html(this.value)">
+				<label style="vertical-align: bottom;font-size: 20px;font-family: Helvetica;min-width: 34px;display: inline-block;" id="sensibilidad_value">70</label>
+				<label style="vertical-align: bottom;font-size: 20px;font-family: Helvetica;">RPM</label>
+			</div>
+		</div>
+
+		<div class="form-style-10" style="text-align: center;">
+
+			<label style="display: inline-block;margin-right: 10%;text-align: left;">GPS Latitude <div> <input disabled id="latitude_gui" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+			<label style="display: inline-block;text-align: left;">GPS Longitude <div> <input disabled id="longitude_gui" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+		</div>
+
+		<div class="form-style-10" style="text-align: center;">
+
+			<label style="display: inline-block;margin-right: 10%;text-align: left;">IMU Azimuth <div> <input disabled id="azimuth_gui" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+			<label style="display: inline-block;text-align: left;">Lineal Speed: <div> <input disabled id="l_speed_gui" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+		</div>
+
+		<div class="form-style-10" style="text-align: center;">
+
+			<label style="display: inline-block;margin-right: 10%;text-align: left;">Steering Speed <div> <input disabled id="steering_gui" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+			<label style="display: inline-block;text-align: left;">Physical Joystick Sensibility <div> <input disabled id="sensibilidad_jk_fisico" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+		</div>
+
+
+		<div class="form-style-10" style="text-align: center;">
+
+			<label style="display: inline-block;margin-right: 10%;text-align: left;">Left PWM <div> <input disabled id="PWM_I" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+			<label style="display: inline-block;text-align: left;">Right PWM <div> <input disabled id="PWM_D" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+		</div>
+
+
+
+
+
+
+
+	</div>
+
+
+	<div style="position: absolute;width: 100vw;z-index: 4;left: 0;bottom: 0;border-top: 2.5px solid rgb(107, 107, 107);background-color: rgba(255, 255, 255, 0.28);padding-bottom: 14px;height: 65px;padding: 5px; display: flex;" id="bottom_banner">
+
+		<div id="btn1" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/'">
+
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Traction</label>
+
+		</div>
+
+		<div id="btn2" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/auto'">
+
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Autonomous Control</label>
+
+		</div>
+
+		<div id="btn3" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/roboticArm'">
+
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Robotic Arm</label>
+
+		</div>
+
+		<div id="btn4" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/geo'">
+
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Geoscientific Toolkit</label>
+
+		</div>
+
+		<div id="btn5" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/status'">
+
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Rover Status</label>
+
+		</div>
+
+
+	</div>
+
+	<script type="text/javascript">
+
+		function setBottomHeight()
+		{
+			//var altura = 65//$(window).height() - ( $("#telemetry").height() + $("#telemetry").position().top + 44 + 40)
+			//$("#bottom_banner").css({"height":altura})
+		}
+
+		$(window).on('resize', function(){
+			//setBottomHeight()
+			joystick.destroy()
+			createJoystick()
+
+		});
+		setBottomHeight()
+	</script>
+
+
+
+</body>
+
+
+<script type="text/javascript">
+
+	addr = 'ws://'+$(location).attr('href').replace("http://", "")+'ws/bgUpdate_traction/'
+
+	mainSocket = new WebSocket(addr);
+
+	mainSocket.onmessage = function(e) {
+
+		var data = JSON.parse(e.data);
+
+		if(data['PWM_I']==999){data['PWM_I']=0}
+		if(data['PWM_D']==999){data['PWM_D']=0}
+
+		$("#PWM_I").val(data['PWM_I'] + " RPM")
+		$("#PWM_D").val(data['PWM_D'] + " RPM")
+		$("#sensibilidad_jk_fisico").val(data['sensibilidad_jk_fisico'] + " RPM")
+
+
+		if (data['com'] == false)
+		{
+			$("#color-1").prop("checked", true);
+		}
+		else
+		{
+			$("#color-2").prop("checked", true);
+		}
+
+		$("#latitude_gui").val(data['latitude'] + '\xB0')
+		$("#longitude_gui").val(data['longitude'] + "\xB0")
+		$("#azimuth_gui").val(data['azimuth'] + "\xB0")
+		$("#l_speed_gui").val(data['l_speed'] + " m/s")
+		$("#steering_gui").val(data['steering'] + " \xB0/s")
+
+
+	}
+
+		ACCION_JK = 0
+		COM_CHANGE = 1
+
+
+	</script>
+
+	<script src="{% static 'js/virtualjoystick.js' %}"></script>
+	<script>
+		function createJoystick()
+		{
+			joystick = new VirtualJoystick({
+				container	: document.getElementById('container'),
+				mouseSupport	: true,
+				strokeStyle	: 'rgb(255,255,255)',
+				mouseSupport: true,
+				stationaryBase: true,
+				baseX: $("#joystick_circle").position().left + $("#joystick_circle").width()/2,
+				baseY: $("#joystick_circle").position().top + $("#joystick_circle").height()/2,
+				limitStickTravel: true,
+				stickRadius: 130	
+			});
+
+			joystick.addEventListener('touchmoveVal', function(event){
+				enviarAccionJK(joystick.deltaX(), joystick.deltaY(), $("#sensibilidad").val());
+			});
+			joystick.addEventListener('touchEnd', function(event){
+				enviarAccionJK(0, 0, $("#sensibilidad").val());
+			});
+			joystick.addEventListener('touchStartValidation', function(event){
+				var touch	= event.changedTouches[0];
+				var x = touch.pageX
+				var y = touch.pageY
+				var val1 = x <= $("#joystick_circle").position().left | x >= ($("#joystick_circle").position().left+$("#joystick_circle").width())
+				var val2 = y <= $("#joystick_circle").position().top | y >= ($("#joystick_circle").position().top+$("#joystick_circle").height())
+				if( val1 | val2 )	return false;
+				return true
+			});
+			joystick.addEventListener('mouseValidation', function(event){
+				var x = event.clientX;
+				var y = event.clientY;
+				var val1 = x <= $("#joystick_circle").position().left | x >= ($("#joystick_circle").position().left+$("#joystick_circle").width())
+				var val2 = y <= $("#joystick_circle").position().top | y >= ($("#joystick_circle").position().top+$("#joystick_circle").height())
+				if( val1 | val2 )	return false;
+				return true
+			});
+		}
+		createJoystick()
+
+
+		$("#btn1").animate({ 
+			boxShadow: "0px 0px 10px 0px rgb(0, 0, 0)",
+			backgroundColor: 'rgba(0,0,0,0.18)'
+		}); 
+
+
+		function enviarAccionJK(deltaX, deltaY, sensibilidad) {
+
+			var toSend = {};
+			toSend['type'] = ACCION_JK
+			toSend['deltaX'] = deltaY/130
+			toSend['deltaY'] = deltaX/130
+			toSend['sensibilidad'] = parseInt(sensibilidad)
+
+			mainSocket.send(JSON.stringify(toSend));
+		}
+
+		function cambiarCom(mensaje) {
+			var toSend = {};
+			toSend['type'] = COM_CHANGE
+			toSend['newCom'] = mensaje
+
+			mainSocket.send(JSON.stringify(toSend));
+		}
+
+		if (navigator.appVersion.indexOf("Win")!=-1) 
+		{
+			$('#titulo').css('margin-top','-10px');
+		}
+
+
+
+	</script>
+
+	</html>
