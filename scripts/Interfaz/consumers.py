@@ -60,8 +60,6 @@ rospy.Subscriber('topic_rpm', rpm, RPM_Callback)
 
 #### CONSTANTES ####
 
-RF = False
-WIFI = True
 ACCION_JK = 0
 TOGGLE_MOT_STATUS = 0
 
@@ -70,10 +68,11 @@ GUI_UPDATE_RATE = 100E-3
 #### VARIABLES ####
 
 ## Joystick virtual
-global ultimo_izquierdo, ultimo_derecho
+global ultimo_izquierdo, ultimo_derecho, sensibilidad_jk
 
 ultimo_izquierdo = 999
 ultimo_derecho = 999
+sensibilidad_jk = 0
 
 ## Odometria
 
@@ -144,8 +143,8 @@ joint6 = 0
 
 def enviarMensajeInicializacion():
 	timesToSend = 5
-	while timesToSend>=0:
-		print("Publishing ROS node status (alive)")
+	while timesToSend>0:
+		print("Publishing ROS node status (alive)") #Publish active status and motors enable
 		timesToSend-=1
 		time.sleep(1)
 threading.Thread(target=enviarMensajeInicializacion).start()
@@ -154,7 +153,6 @@ threading.Thread(target=enviarMensajeInicializacion).start()
 #### CONSUMER DE ACTUALIZACION PARA LA INTERFAZ DE TRACCION ####
 class bgUpdate_traction(WebsocketConsumer):
 	def connect(self):
-
 		self.room_name = 'r'+str(time.time())
 		self.room_group_name = 'bgUpdateConsumers_traction'
 		async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
@@ -175,7 +173,6 @@ class bgUpdate_traction(WebsocketConsumer):
 #### CONSUMER DE ACTUALIZACION PARA LA INTERFAZ DE ESTATUS ####
 class bgUpdate_status(WebsocketConsumer):
 	def connect(self):
-
 		self.room_name = 'e'+str(time.time())
 		self.room_group_name = 'bgUpdateConsumers_status'
 		async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
@@ -186,7 +183,9 @@ class bgUpdate_status(WebsocketConsumer):
 
 	def receive(self, text_data):
 		global L0_status, L1_status, L2_status, R0_status, R1_status, R2_status
+
 		text_data_json = json.loads(text_data)
+
 		if text_data_json['type'] == TOGGLE_MOT_STATUS:
 
 			mot_id = text_data_json['id']
@@ -268,21 +267,16 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 
 
 	def connect(self):
-
 		self.room_name = 'e'+str(time.time())
 		self.room_group_name = 'bgUpdateConsumers_roboticArm'
-
 		async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
-
 		self.accept()
 
 	def disconnect(self, close_code):
 		async_to_sync(self.channel_layer.group_discard)(self.room_group_name,self.channel_name)
 
 	def receive(self, text_data):
-
 		text_data_json = json.loads(text_data)
-
 		letrasMotores = ['B', 'C', 'D', 'E', 'F', 'G', 'H']
 
 		if text_data_json['type'] != "PINZA":
@@ -312,7 +306,7 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 
 def threadGUIupdate():
 
-	global ultimo_izquierdo, ultimo_derecho, sensibilidad_jk, rf_wifi_selector, latitude, longitude, azimuth, l_speed, steering_spd
+	global ultimo_izquierdo, ultimo_derecho, sensibilidad_jk, latitude, longitude, azimuth, l_speed, steering_spd
 
 	while True:
 		options = {}
@@ -321,7 +315,7 @@ def threadGUIupdate():
 		options['PWM_I'] = ultimo_izquierdo
 		options['PWM_D'] = ultimo_derecho
 		options['sensibilidad_jk_fisico'] = sensibilidad_jk
-		options['com'] = rf_wifi_selector
+		options['com'] = True
 
 		options['latitude'] = latitude
 		options['longitude'] = longitude
@@ -495,5 +489,5 @@ def ROS_exit_helper():
 		if rospy.is_shutdown():
 			print("Killing Django...")
 			os._exit(0)
-		time.sleep(1)
+		time.sleep(500E-3)
 threading.Thread(target=ROS_exit_helper).start()
