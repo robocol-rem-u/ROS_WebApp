@@ -19,6 +19,10 @@ import rospy
 ## ROS Callbacks
 
 def traction_Orders_Callback(param):
+    global ultimo_derecho,ultimo_izquierdo,sensibilidad_jk
+    ultimo_derecho=param.rpm_r
+    ultimo_izquierdo=param.rpm_l
+    sensibilidad_jk=param.sensibility
     pass
 
 def IMU_Speed_Callback(param):
