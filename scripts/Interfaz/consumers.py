@@ -190,6 +190,8 @@ class bgUpdate_status(WebsocketConsumer):
 
 		text_data_json = json.loads(text_data)
 
+		print(text_data_json)
+
 		if text_data_json['type'] == TOGGLE_MOT_STATUS:
 
 			mot_id = text_data_json['id']
