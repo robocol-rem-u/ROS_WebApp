@@ -6,9 +6,10 @@ import rospy
 def prueba():
     rospy.init_node('nodo_prueba_enable', anonymous=True)
     s = rospy.Service('service_enable', service_enable, handle_prueba)
-    while not rospy.is_shutdown():
-        rospy.sleep(rospy.Rate(10))
-        pass
+    rospy.spin()
+    #while not rospy.is_shutdown():
+        #rospy.sleep(rospy.Rate(10))
+        #pass
 
 
 def handle_prueba(param):
