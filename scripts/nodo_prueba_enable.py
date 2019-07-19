@@ -1,7 +1,8 @@
 from master_msgs.srv import service_enable
 import rospy
 
-def nodo_prueba_enable():
+
+def prueba():
     rospy.init_node('nodo_prueba_enable', anonymous=True)
     s = rospy.Service('service_enable', service_enable, handle_prueba)
     while not rospy.is_shutdown():
@@ -16,6 +17,6 @@ def handle_prueba(param):
 
 if __name__ == '__main__':
     try:
-        nodo_prueba_enable()
+        prueba()
     except rospy.ROSInterruptException:
         pass
