@@ -277,13 +277,16 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 		self.room_group_name = 'bgUpdateConsumers_roboticArm'
 		async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
 		self.accept()
+		print("Que mas mi pez")
 
 	def disconnect(self, close_code):
 		async_to_sync(self.channel_layer.group_discard)(self.room_group_name,self.channel_name)
+		print("Cual fue el lio mi perro")
 
 	def receive(self, text_data):
 		text_data_json = json.loads(text_data)
 		letrasMotores = ['B', 'C', 'D', 'E', 'F', 'G', 'H']
+		print("Que mas mi perro")
 
 		if text_data_json['type'] != "PINZA":
 			id_motor = int(text_data_json['id'])
