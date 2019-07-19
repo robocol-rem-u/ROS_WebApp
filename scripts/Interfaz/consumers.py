@@ -212,7 +212,7 @@ class bgUpdate_status(WebsocketConsumer):
 
 			charEn = SEPARADOR_POSITIVO if new_state else SEPARADOR_NEGATIVO
 
-			rospy.wait_for_service('service_enable')
+			# rospy.wait_for_service('service_enable')
 			srv_enable = rospy.ServiceProxy('service_enable', service_enable)
 			srv_enable("I"+str(mot_id)+charEn)
 
