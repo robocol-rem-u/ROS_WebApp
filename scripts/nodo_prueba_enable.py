@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from master_msgs.srv import service_enable
 import rospy
 
