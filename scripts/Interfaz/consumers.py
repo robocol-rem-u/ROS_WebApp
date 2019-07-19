@@ -14,6 +14,7 @@ channel_layer = channels.layers.get_channel_layer()
 
 #ROS imports
 from master_msgs.msg import traction_Orders, imu_Speed, imu_Magnetism, pots, current, rpm, arm_Orders, connection
+from master_msgs.srv import service_enable
 import rospy
 
 ## ROS Callbacks
@@ -211,7 +212,11 @@ class bgUpdate_status(WebsocketConsumer):
 
 			charEn = SEPARADOR_POSITIVO if new_state else SEPARADOR_NEGATIVO
 
-			transmitirMensaje("I"+str(mot_id)+charEn)
+			rospy.wait_for_service('service_enable')
+			srv_enable = rospy.ServiceProxy('service_enable', service_enable)
+			srv_enable("I"+str(mot_id)+charEn)
+
+			#transmitirMensaje("I"+str(mot_id)+charEn)
 
 
 	def updateGUI(self, event):
