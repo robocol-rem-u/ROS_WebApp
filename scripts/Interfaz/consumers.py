@@ -314,7 +314,10 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 		elif text_data_json['type'] == "PINZA":
 			mensaje = "S" + str(text_data_json['num']) + SEPARADOR_POSITIVO
 			# transmitirMensaje("S" + str(text_data_json['num']) + SEPARADOR_POSITIVO )
-		print(mensaje)
+		msg = arm_Orders()
+		msg.message = mensaje
+		pub_Arm_Orders.publish(msg)
+
 
 
 
