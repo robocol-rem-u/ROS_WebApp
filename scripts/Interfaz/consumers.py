@@ -316,7 +316,7 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 			# transmitirMensaje("S" + str(text_data_json['num']) + SEPARADOR_POSITIVO )
 		msg = arm_Orders()
 		msg.message = mensaje# .encode('utf-8')
-		#pub_Arm_Orders.publish(msg)
+		pub_Arm_Orders.publish(msg)
 
 
 
