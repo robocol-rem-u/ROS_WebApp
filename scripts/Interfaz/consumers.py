@@ -140,6 +140,11 @@ joint6 = 0
 
 
 
+SEPARADOR_POSITIVO = "#"
+SEPARADOR_NEGATIVO = "!"
+
+
+
 
 
 
@@ -296,15 +301,22 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 				speed = 10
 			elif (id_motor == 1 or id_motor == 3):
 				speed = 50
-
+		mensaje = ""
 		if text_data_json['type'] == "STOP":
-			transmitirMensaje(letrasMotores[text_data_json['id']-1] + "0" + SEPARADOR_POSITIVO )
+			mensaje = letrasMotores[text_data_json['id']-1] + "0" + SEPARADOR_POSITIVO
+			# transmitirMensaje(letrasMotores[text_data_json['id']-1] + "0" + SEPARADOR_POSITIVO )
 		elif text_data_json['type'] == "ADELANTE":
-			transmitirMensaje(letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_POSITIVO )
+			mensaje = letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_POSITIVO
+			# transmitirMensaje(letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_POSITIVO )
 		elif text_data_json['type'] == "ATRAS":
-			transmitirMensaje(letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_NEGATIVO )
+			mensaje = letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_NEGATIVO
+			# transmitirMensaje(letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_NEGATIVO )
 		elif text_data_json['type'] == "PINZA":
-			transmitirMensaje("S" + str(text_data_json['num']) + SEPARADOR_POSITIVO )
+			mensaje = "S" + str(text_data_json['num']) + SEPARADOR_POSITIVO
+			# transmitirMensaje("S" + str(text_data_json['num']) + SEPARADOR_POSITIVO )
+		print(mensaje)
+
+
 
 	def updateGUI(self, event):
 
