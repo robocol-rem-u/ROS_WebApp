@@ -36,9 +36,23 @@ def pots_Callback(param):
     pass
 
 def current_Callback(param):
+	global L0_current, L1_current, L2_current, R0_current, R1_current, R2_current
+	L0_current=param.L0_C
+	L1_current=param.L1_C
+	L2_current=param.L2_C
+	R0_current=param.R0_C
+	R1_current=param.R1_C
+	R2_current=param.R2_C
     pass
 
 def RPM_Callback(param):
+	global L0_speed, L1_speed, L2_speed, R0_speed, R1_speed, R2_speed
+	L0_spped=param.L0_V
+	L1_speed=param.L1_V
+	L2_speed=param.L2_V
+	R0_speed=param.R0_V
+	R1_speed=param.R1_V
+	R2_speed=param.R2_V
     pass
 
 def arm_Orders_Callback(param):
