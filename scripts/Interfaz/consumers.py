@@ -8,6 +8,7 @@ import math
 import urllib.request
 import numpy as np
 import os
+from nav_msgs.msg import Odometry
 
 #Channel REDIS layer
 channel_layer = channels.layers.get_channel_layer()
