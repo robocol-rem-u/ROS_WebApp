@@ -20,22 +20,22 @@ import rospy
 ## ROS Callbacks
 
 def traction_Orders_Callback(param):
-    global ultimo_derecho,ultimo_izquierdo,sensibilidad_jk
-    ultimo_derecho=param.rpm_r
-    ultimo_izquierdo=param.rpm_l
-    sensibilidad_jk=param.sensibility
-    pass
+	global ultimo_derecho,ultimo_izquierdo,sensibilidad_jk
+	ultimo_derecho=param.rpm_r
+	ultimo_izquierdo=param.rpm_l
+	sensibilidad_jk=param.sensibility
+	pass
 
 def IMU_Speed_Callback(param):
-    pass
+	pass
 
 def IMU_Magnetism_Callback(param):
-    pass
+	pass
 
 def pots_Callback(param):
-    pass
+	pass
 
-def current_Callback(param):
+def	current_Callback(param):
 	global L0_current, L1_current, L2_current, R0_current, R1_current, R2_current
 	L0_current=param.L0_C
 	L1_current=param.L1_C
@@ -56,8 +56,14 @@ def RPM_Callback(param):
 	pass
 
 def arm_Orders_Callback(param):
-    pass
+	pass
 
+def odom_Callback(param):
+	global latitude, longitude
+	latitude=param.pose.pose.position.x
+	longitude=param.pose.pose.position.y
+
+	pass
 
 #ROS Node declarations
 rospy.init_node('Django_node', anonymous=True)
@@ -75,6 +81,7 @@ rospy.Subscriber('topic_imu_magnetism', imu_Magnetism, IMU_Magnetism_Callback)
 rospy.Subscriber('topic_pots', pots, pots_Callback)
 rospy.Subscriber('topic_current', current, current_Callback)
 rospy.Subscriber('topic_rpm', rpm, RPM_Callback)
+rospy.Publisher ('odom', Odometry, odom_Callback)
 
 
 #### CONSTANTES ####
