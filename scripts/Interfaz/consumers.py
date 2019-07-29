@@ -88,7 +88,7 @@ rospy.Subscriber('topic_imu_magnetism', imu_Magnetism, IMU_Magnetism_Callback)
 rospy.Subscriber('topic_pots', pots, pots_Callback)
 rospy.Subscriber('topic_current', current, current_Callback)
 rospy.Subscriber('topic_rpm', rpm, RPM_Callback)
-rospy.Publisher ('odom', Odometry, odom_Callback)
+rospy.Subscriber ('odom', Odometry, odom_Callback)
 
 
 #### CONSTANTES ####
