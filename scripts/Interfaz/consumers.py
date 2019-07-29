@@ -33,6 +33,14 @@ def IMU_Magnetism_Callback(param):
 	pass
 
 def pots_Callback(param):
+	global joint0, joint1, joint2, joint3, joint4, joint5, joint6
+	joint0 = param.J0
+	joint1 = param.J1
+	joint2 = param.J2
+	joint3 = param.J3
+	joint4 = param.J4
+	joint5 = param.J5
+	joint6 = param.J6
 	pass
 
 def	current_Callback(param):
@@ -62,7 +70,6 @@ def odom_Callback(param):
 	global latitude, longitude
 	latitude=param.pose.pose.position.x
 	longitude=param.pose.pose.position.y
-
 	pass
 
 #ROS Node declarations
