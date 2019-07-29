@@ -344,7 +344,7 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 			mensaje = letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_NEGATIVO
 			# transmitirMensaje(letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_NEGATIVO )
 		elif text_data_json['type'] == "PINZA":
-			mensaje = "S" + str(text_data_json['num']) + SEPARADOR_POSITIVO
+			mensaje = "T" + str(text_data_json['num']) + SEPARADOR_POSITIVO
 			# transmitirMensaje("S" + str(text_data_json['num']) + SEPARADOR_POSITIVO )
 		msg = arm_Orders()
 		msg.message = mensaje# .encode('utf-8')
