@@ -301,8 +301,6 @@ class bgUpdate_autonomous(WebsocketConsumer):
 
 #### CONSUMER DE ACTUALIZACION PARA LA INTERFAZ DE BRAZO ROBOTICO ####
 class bgUpdate_roboticArm(WebsocketConsumer):
-
-
 	def connect(self):
 		self.room_name = 'e'+str(time.time())
 		self.room_group_name = 'bgUpdateConsumers_roboticArm'
