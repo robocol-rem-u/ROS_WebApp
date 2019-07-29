@@ -47,7 +47,7 @@ def current_Callback(param):
 
 def RPM_Callback(param):
 	global L0_speed, L1_speed, L2_speed, R0_speed, R1_speed, R2_speed
-	L0_spped=param.L0_V
+	L0_speed=param.L0_V
 	L1_speed=param.L1_V
 	L2_speed=param.L2_V
 	R0_speed=param.R0_V
