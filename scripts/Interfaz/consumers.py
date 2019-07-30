@@ -203,6 +203,7 @@ class bgUpdate_traction(WebsocketConsumer):
 	def receive(self, text_data):
 		text_data_json = json.loads(text_data)
 		if text_data_json['type'] == ACCION_JK:
+			print("Receive JK")
 			procesarJoystick(text_data_json['deltaX'], text_data_json['deltaY'], text_data_json['sensibilidad'])
 
 	def updateGUI(self, event):
