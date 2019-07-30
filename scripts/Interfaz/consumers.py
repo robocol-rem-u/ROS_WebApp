@@ -501,19 +501,40 @@ def procesarJoystick(x, y, sensibilidad):
 
 	(calc_PWM_izq, calc_PWM_der) = steering(x, y, sensibilidad)
 	
-	StringIzquierda = ("L"+str(calc_PWM_izq)+SEPARADOR_NEGATIVO) if (calc_PWM_izq >= 0) else ("L"+str(-calc_PWM_izq)+SEPARADOR_POSITIVO)
-	StringDerecha = ("R"+str(calc_PWM_der)+SEPARADOR_NEGATIVO) if (calc_PWM_der >= 0) else ("R"+str(-calc_PWM_der)+SEPARADOR_POSITIVO)
+	MensajeSeguridadMotoresIzq = False
+	MensajeSeguridadMotoresDer = False
 
-	MensajeSeguridadMotores = ""
 
 	if np.sign(ultimo_izquierdo) != np.sign(calc_PWM_izq) and calc_PWM_izq!=0 and np.sign(ultimo_izquierdo)!=0:
-		MensajeSeguridadMotores+="L0#"
+		MensajeSeguridadMotoresIzq = True
 
 	if np.sign(ultimo_derecho) != np.sign(calc_PWM_der) and calc_PWM_der!=0 and np.sign(ultimo_derecho)!=0:
-		MensajeSeguridadMotores+="R0#"
+		MensajeSeguridadMotoresDer = True
 
 	if np.abs(ultimo_izquierdo-calc_PWM_izq)>3 or np.abs(ultimo_derecho-calc_PWM_der)>3 or (calc_PWM_der==0 and ultimo_derecho!=0) or (calc_PWM_izq==0 and ultimo_izquierdo!=0):
-		transmitirMensaje(MensajeSeguridadMotores+StringIzquierda+StringDerecha)
+		
+		if MensajeSeguridadMotoresIzq and MensajeSeguridadMotoresDer:
+			order = traction_Orders()
+			order.rpm_r, order.rpm_l = 0, 0
+			order.sensibility = sensibilidad
+			pub_traction_orders.publish(order)
+
+		elif MensajeSeguridadMotoresIzq:
+			order = traction_Orders()
+			order.rpm_r, order.rpm_l = calc_PWM_der, 0
+			order.sensibility = sensibilidad
+			pub_traction_orders.publish(order)
+
+		elif MensajeSeguridadMotoresDer:
+			order = traction_Orders()
+			order.rpm_r, order.rpm_l = 0, calc_PWM_izq
+			order.sensibility = sensibilidad
+			pub_traction_orders.publish(order)
+
+		order = traction_Orders()
+		order.rpm_r, order.rpm_l = calc_PWM_der, calc_PWM_izq
+		order.sensibility = sensibilidad
+		pub_traction_orders.publish(order)
 
 		ultimo_izquierdo = calc_PWM_izq
 		ultimo_derecho = calc_PWM_der
