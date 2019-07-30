@@ -517,24 +517,24 @@ def procesarJoystick(x, y, sensibilidad):
 			order = traction_Orders()
 			order.rpm_r, order.rpm_l = 0, 0
 			order.sensibility = sensibilidad
-			pub_traction_orders.publish(order)
+			pub_Traction_orders.publish(order)
 
 		elif MensajeSeguridadMotoresIzq:
 			order = traction_Orders()
 			order.rpm_r, order.rpm_l = calc_PWM_der, 0
 			order.sensibility = sensibilidad
-			pub_traction_orders.publish(order)
+			pub_Traction_orders.publish(order)
 
 		elif MensajeSeguridadMotoresDer:
 			order = traction_Orders()
 			order.rpm_r, order.rpm_l = 0, calc_PWM_izq
 			order.sensibility = sensibilidad
-			pub_traction_orders.publish(order)
-
+			pub_Traction_orders.publish(order)
+		print("holi")
 		order = traction_Orders()
 		order.rpm_r, order.rpm_l = calc_PWM_der, calc_PWM_izq
 		order.sensibility = sensibilidad
-		pub_traction_orders.publish(order)
+		pub_Traction_orders.publish(order)
 
 		ultimo_izquierdo = calc_PWM_izq
 		ultimo_derecho = calc_PWM_der
