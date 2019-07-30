@@ -515,27 +515,31 @@ def procesarJoystick(x, y, sensibilidad):
 		
 		if MensajeSeguridadMotoresIzq and MensajeSeguridadMotoresDer:
 			order = traction_Orders()
-			order.rpm_r, order.rpm_l = 0, 0
-			order.sensibility = sensibilidad
-			pub_Traction_orders.publish(order)
+			order.rpm_r, order.rpm_l = np.float32(0), np.float32(0)
+			order.sensibility = np.float32(sensibilidad)
+			pub_Traction_Orders.publish(order)
 
 		elif MensajeSeguridadMotoresIzq:
 			order = traction_Orders()
-			order.rpm_r, order.rpm_l = calc_PWM_der, 0
-			order.sensibility = sensibilidad
-			pub_Traction_orders.publish(order)
+			order.rpm_r, order.rpm_l = np.float32(calc_PWM_der), np.float32(0)
+			order.sensibility = np.float32(sensibilidad)
+			pub_Traction_Orders.publish(order)
 
 		elif MensajeSeguridadMotoresDer:
 			order = traction_Orders()
-			order.rpm_r, order.rpm_l = 0, calc_PWM_izq
-			order.sensibility = sensibilidad
-			pub_Traction_orders.publish(order)
-		print("holi")
+			order.rpm_r, order.rpm_l = np.float32(0), np.float32(calc_PWM_izq)
+			order.sensibility = np.float32(sensibilidad)
+			pub_Traction_Orders.publish(order)
+		
 		order = traction_Orders()
-		order.rpm_r, order.rpm_l = calc_PWM_der, calc_PWM_izq
-		order.sensibility = sensibilidad
-		pub_Traction_orders.publish(order)
 
+
+		order.rpm_r, order.rpm_l = np.float32(calc_PWM_der), np.float32(calc_PWM_izq)
+		order.sensibility = np.float32(sensibilidad)
+		order.header.stamp = rospy.Time.now()
+		pub_Traction_Orders.publish(order)
+
+		
 		ultimo_izquierdo = calc_PWM_izq
 		ultimo_derecho = calc_PWM_der
 
