@@ -14,7 +14,7 @@ from nav_msgs.msg import Odometry
 channel_layer = channels.layers.get_channel_layer()
 
 #ROS imports
-from master_msgs.msg import traction_Orders, imu_Speed, imu_Magnetism, pots, current, rpm, arm_Orders, connection
+from master_msgs.msg import traction_Orders, imu_Speed, imu_Magnetism, pots, current, rpm, arm_Orders, connection, batteries
 from master_msgs.srv import service_enable
 import rospy
 
@@ -73,6 +73,14 @@ def odom_Callback(param):
 	longitude=param.pose.pose.position.y
 	pass
 
+def bat_Callback(param)
+	global bat0, bat1, bat2, bat3
+
+	bat0 = param.volttrac
+	bat1 = param.voltelect
+	bat2 = param.voltap
+	bat3 = param.voltarm
+
 #ROS Node declarations
 rospy.init_node('Django_node', anonymous=True)
 
@@ -90,6 +98,7 @@ rospy.Subscriber('topic_pots', pots, pots_Callback)
 rospy.Subscriber('topic_current', current, current_Callback)
 rospy.Subscriber('topic_rpm', rpm, RPM_Callback)
 rospy.Subscriber ('odom', Odometry, odom_Callback)
+rospy.Subscriber ('topic_bat', batteries, bat_Callback)
 
 
 #### CONSTANTES ####
