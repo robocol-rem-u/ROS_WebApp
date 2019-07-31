@@ -206,10 +206,10 @@
 		var data = JSON.parse(e.data);
 		
 
-		$("#humidity").val(data['humedad']+" %")
-		$("#methane").val(data['metano']+" ppm (methane)")
-		$("#temperature").val(data['temperatura']+" "+String.fromCharCode(176)+"C")
-		$("#hidrogen").val(data['hidrogeno']+" ppm (hydrogen)")
+		$("#humidity").val(data['humedad'].toFixed(2)+" %")
+		$("#methane").val(data['metano'].toFixed(2)+" ppm (methane)")
+		$("#temperature").val(data['temperatura'].toFixed(2)+" "+String.fromCharCode(176)+"C")
+		$("#hidrogen").val(data['hidrogeno'].toFixed(2)+" ppm (hydrogen)")
 
 
 
