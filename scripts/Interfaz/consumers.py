@@ -83,10 +83,10 @@ def bat_Callback(param):
 
 def geo_Callback(param):
 	global humedad, metano, hidrogeno, tempratura
-	param.humedad
-	param.metano
-	param.hidrogeno
-	param.tempratura
+	humedad = param.humedad
+	metano = param.metano
+	hidrogeno = param.hidrogeno
+	tempratura = param.tempratura
 
 #ROS Node declarations
 rospy.init_node('Django_node', anonymous=True)
