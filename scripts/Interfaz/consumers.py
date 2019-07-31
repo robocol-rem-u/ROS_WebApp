@@ -73,7 +73,7 @@ def odom_Callback(param):
 	longitude=param.pose.pose.position.y
 	pass
 
-def bat_Callback(param)
+def bat_Callback(param):
 	global bat0, bat1, bat2, bat3
 
 	bat0 = param.volttrac
