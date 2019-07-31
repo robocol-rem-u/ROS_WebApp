@@ -14,7 +14,7 @@ from nav_msgs.msg import Odometry
 channel_layer = channels.layers.get_channel_layer()
 
 #ROS imports
-from master_msgs.msg import traction_Orders, imu_Speed, imu_Magnetism, pots, current, rpm, arm_Orders, connection, batteries
+from master_msgs.msg import traction_Orders, imu_Speed, imu_Magnetism, pots, current, rpm, arm_Orders, connection, batteries, geociencia
 from master_msgs.srv import service_enable
 import rospy
 
@@ -81,6 +81,13 @@ def bat_Callback(param):
 	bat2 = param.volttrac
 	bat3 = param.voltap
 
+def geo_Callback(param):
+	global humedad, metano, hidrogeno, tempratura
+	param.humedad
+	param.metano
+	param.hidrogeno
+	param.tempratura
+
 #ROS Node declarations
 rospy.init_node('Django_node', anonymous=True)
 
@@ -99,6 +106,7 @@ rospy.Subscriber('topic_current', current, current_Callback)
 rospy.Subscriber('topic_rpm', rpm, RPM_Callback)
 rospy.Subscriber ('odom', Odometry, odom_Callback)
 rospy.Subscriber ('topic_bat', batteries, bat_Callback)
+rospy.Subscriber ('topic_geociencia', geociencia, geo_Callback)
 
 
 #### CONSTANTES ####
@@ -176,6 +184,16 @@ joint3 = 0
 joint4 = 0
 joint5 = 0
 joint6 = 0
+
+
+## Geo
+
+global humedad, metano, hidrogeno, tempratura
+
+humedad = 0
+metano = 0
+hidrogeno = 0
+tempratura = 0
 
 
 
@@ -367,6 +385,25 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 		self.send(text_data=json.dumps(event))
 
 
+#### CONSUMER DE ACTUALIZACION PARA LA INTERFAZ DE GEOCIENCIAS ####
+class bgUpdate_geo(WebsocketConsumer):
+	def connect(self):
+		self.room_name = 'e'+str(time.time())
+		self.room_group_name = 'bgUpdateConsumers_geo'
+		async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
+		self.accept()
+
+	def disconnect(self, close_code):
+		async_to_sync(self.channel_layer.group_discard)(self.room_group_name,self.channel_name)
+
+	def receive(self, text_data):
+		pass
+
+	def updateGUI(self, event):
+
+		self.send(text_data=json.dumps(event))
+
+
 
 #### THREAD PARA ACTUALIZAR LA INTERFAZ DE TRACCION ####
 
@@ -500,6 +537,28 @@ def threadGUIupdate_roboticArm():
 	
 threading.Thread(target=threadGUIupdate_roboticArm).start()
 
+
+#### THREAD PARA ACTUALIZAR LA INTERFAZ DE TRACCION ####
+
+def threadGUIupdate_geo():
+
+	global humedad, metano, hidrogeno, tempratura
+
+	while True:
+		options = {}
+		options['type'] = 'updateGUI'
+
+		options['humedad'] = humedad
+		options['metano'] = metano
+		options['hidrogeno'] = hidrogeno
+		options['temperatura'] = tempratura
+
+		async_to_sync(channel_layer.group_send)('bgUpdateConsumers_geo', options)
+
+		time.sleep(GUI_UPDATE_RATE)
+
+	
+threading.Thread(target=threadGUIupdate_geo).start()
 
 #### METODO PARA RECIBIR LAS ACCIONES DE UN JOYSTICK ####
 #Requiere convertir x, y entre -1 y 1

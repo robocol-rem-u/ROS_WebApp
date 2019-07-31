@@ -10,16 +10,14 @@
 	
 
 	<style type="text/css">
-	
-	label{
-		font-family: Helvetica;
-	}
 
-	
-
-</style>
+		label{
+			font-family: Helvetica;
+		}
 
 
+
+	</style>
 
 
 
@@ -28,59 +26,61 @@
 
 
 
-<style type="text/css">
-
-.form-style-10 input {
-	display: block;
-	box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	width: 49%;
-	padding: 6px;
-	font-size: 16px;
-	font-family: Helvetica;
-	border-radius: 6px;
-	-webkit-border-radius:6px;
-	-moz-border-radius:6px;
-	border: 2px solid #fff;
-	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
-	-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
-	-webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
-}
-.form-style-10 label{
-	display: block;
-	font: 16px Arial, Helvetica, sans-serif;
-	color: #fff;
-	margin-bottom: 15px;
-	width: 220px;
-}
-</style>
 
 
-<style type="text/css">
-.slider {
-	-webkit-appearance: none;
-	width: 220px;
-	background: #bbbbbb;
-	outline: none;
-	opacity: 0.7;
-}
-.slider::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	appearance: none;
-	width: 20px;
-	height: 20px;
-	background: #000;
-	cursor: pointer;
-}
+	<style type="text/css">
 
-.slider::-moz-range-thumb {
-	width: 20px;
-	height: 20px;
-	background: #1a6cb5;
-	cursor: pointer;
-}
-</style>
+		.form-style-10 input {
+			display: block;
+			box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			width: 49%;
+			padding: 6px;
+			font-size: 16px;
+			font-family: Helvetica;
+			border-radius: 6px;
+			-webkit-border-radius:6px;
+			-moz-border-radius:6px;
+			border: 2px solid #fff;
+			box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+			-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+			-webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+		}
+		.form-style-10 label{
+			display: block;
+			font: 16px Arial, Helvetica, sans-serif;
+			color: #fff;
+			margin-bottom: 15px;
+			width: 220px;
+		}
+	</style>
+
+
+	<style type="text/css">
+		.slider {
+			-webkit-appearance: none;
+			width: 220px;
+			background: #bbbbbb;
+			outline: none;
+			opacity: 0.7;
+		}
+		.slider::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			appearance: none;
+			width: 20px;
+			height: 20px;
+			background: #000;
+			cursor: pointer;
+		}
+
+		.slider::-moz-range-thumb {
+			width: 20px;
+			height: 20px;
+			background: #1a6cb5;
+			cursor: pointer;
+		}
+	</style>
 
 
 
@@ -90,14 +90,47 @@
 </head>
 
 <style type="text/css">
-@font-face {
-	font-family: 'RoboFont';
-	src: url('{% static 'fonts/Bank Gothic Medium.ttf' %}');
-}
+	@font-face {
+		font-family: 'RoboFont';
+		src: url('{% static 'fonts/Bank Gothic Medium.ttf' %}');
+	}
 </style>
 
 
 <body scroll="no" style="background: linear-gradient(#ffffff, #000000); margin: 0;height: 100vh;overflow: hidden;">
+
+
+
+
+	<div id="telemetry" style="z-index: 4;height: 470px;width: calc(100vw - 4% - 100px);position: absolute;padding:2%;top: 0;bottom: 0;left: 50px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);background: #ffffff08;margin: auto;">
+
+		<div class="form-style-10" style="text-align: center;margin-top: 150px">
+
+			<label style="display: inline-block;margin-right: 10%;text-align: left;">Humidity <div> <input disabled id="humidity" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+			<label style="display: inline-block;text-align: left;">Methane Concentration <div> <input disabled id="methane" name="field2" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+		</div>
+
+		<div class="form-style-10" style="text-align: center;">
+
+			<label style="display: inline-block;margin-right: 10%;text-align: left;">Temperature <div> <input disabled id="temperature" name="field3" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+			<label style="display: inline-block;text-align: left;">Hidrogen Concentration <div> <input disabled id="hidrogen" name="field4" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+		</div>
+
+
+	</div>
+
+
+
+
+
+
+
+
+
 
 
 	<div style="position: absolute;top:0;left: 0;right: 0">
@@ -161,5 +194,28 @@
 </script>
 
 
+
+<script type="text/javascript">
+
+	addr = 'ws://'+$(location).attr('href').replace("http://", "").replace("geo", "")+'ws/bgUpdate_geo/'
+
+	mainSocket = new WebSocket(addr);
+
+	mainSocket.onmessage = function(e) {
+
+		var data = JSON.parse(e.data);
+		
+
+		$("#humidity").val(data['humedad']+" %")
+		$("#methane").val(data['metano']+" ppm (methane)")
+		$("#temperature").val(data['temperatura']+" "+String.fromCharCode(176)+"C")
+		$("#hidrogen").val(data['hidrogeno']+" ppm (hydrogen)")
+
+
+
+	}
+
+
+</script>
 
 </html>
