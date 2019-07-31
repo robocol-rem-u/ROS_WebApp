@@ -76,10 +76,10 @@ def odom_Callback(param):
 def bat_Callback(param):
 	global bat0, bat1, bat2, bat3
 
-	bat0 = param.volttrac
+	bat0 = param.voltarm
 	bat1 = param.voltelect
-	bat2 = param.voltap
-	bat3 = param.voltarm
+	bat2 = param.volttrac
+	bat3 = param.voltap
 
 #ROS Node declarations
 rospy.init_node('Django_node', anonymous=True)
