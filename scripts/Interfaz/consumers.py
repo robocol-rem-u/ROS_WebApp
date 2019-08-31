@@ -33,16 +33,49 @@ def IMU_Speed_Callback(param):
 def IMU_Magnetism_Callback(param):
 	pass
 
+global j_counter
+global joint0_av, joint1_av, joint2_av, joint3_av, joint4_av, joint5_av, joint6_av
+j_counter = 0
+joint0_av = 0
+joint1_av = 0
+joint2_av = 0
+joint3_av = 0
+joint4_av = 0
+joint5_av = 0
+joint6_av = 0
+
 def pots_Callback(param):
 	global joint0, joint1, joint2, joint3, joint4, joint5, joint6
-	joint0 = param.J0
-	joint1 = param.J1
-	joint2 = param.J2
-	joint3 = param.J3
-	joint4 = param.J4
-	joint5 = param.J5
-	joint6 = param.J6
-	pass
+	global joint0_av, joint1_av, joint2_av, joint3_av, joint4_av, joint5_av, joint6_av
+	global j_counter
+
+	if j_counter == 10:
+		joint0 = joint0_av
+		joint1 = joint1_av
+		joint2 = joint2_av
+		joint3 = joint3_av
+		joint4 = joint4_av
+		joint5 = joint5_av
+		joint6 = joint6_av
+		joint0_av = 0
+		joint1_av = 0
+		joint2_av = 0
+		joint3_av = 0
+		joint4_av = 0
+		joint5_av = 0
+		joint6_av = 0
+		j_counter = 0
+	else:
+		j_counter+=1
+		joint0_av += param.J0/10
+		joint1_av += param.J1/10
+		joint2_av += param.J2/10
+		joint3_av += param.J3/10
+		joint4_av += param.J4/10
+		joint5_av += param.J5/10
+		joint6_av += param.J6/10
+		
+
 
 def	current_Callback(param):
 	global L0_current, L1_current, L2_current, R0_current, R1_current, R2_current
@@ -142,10 +175,10 @@ bat0 = bat1 = bat2 = bat3 = 0
 
 global latitude, longitude, azimuth, l_speed, steering_spd, latitude_start, longitude_start
 
-latitude = 4.6030268
-longitude = -74.0650463
-latitude_start = 4.6030268
-longitude_start = -74.0650463
+latitude = 0
+longitude = 0
+latitude_start = 0#4.6030268
+longitude_start = 0#-74.0650463
 azimuth = 0
 l_speed = 0
 steering_spd = 0
@@ -185,6 +218,13 @@ joint4 = 0
 joint5 = 0
 joint6 = 0
 
+## Joint constants
+
+global A_0, A_1, A_2, A_3, A_4, A_5, A_6
+global B_0, B_1, B_2, B_3, B_4, B_5, B_6
+
+A_0, A_1, A_2, A_3, A_4, A_5, A_6 = 0.2365, 0.3598, 0.3749, 0.365, -0.3716, 0.3629, 0.3
+B_0, B_1, B_2, B_3, B_4, B_5, B_6 = -577.67, -1032.5, -1014.4, -688.21, 948.31, -970.8, -400
 
 ## Geo
 
@@ -356,9 +396,9 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 		if text_data_json['type'] != "PINZA":
 			id_motor = int(text_data_json['id'])
 		
-			if (id_motor == 4 or id_motor == 5 or id_motor == 6 or id_motor == 2):
-				speed = 10
-			elif (id_motor == 1 or id_motor == 3):
+			if (id_motor == 1 or id_motor == 2):
+				speed = 25
+			elif (id_motor == 3 or id_motor == 4 or id_motor == 5 or id_motor == 6 or id_motor == 7):
 				speed = 50
 		mensaje = ""
 		if text_data_json['type'] == "STOP":
@@ -468,10 +508,10 @@ def threadGUIupdate_STATUS():
 		options['R1_status'] = R1_status
 		options['R2_status'] = R2_status
 		options['rover_temp'] = rover_temp
-		options['bat0'] = bat0
-		options['bat1'] = bat1
-		options['bat2'] = bat2
-		options['bat3'] = bat3
+		options['bat0'] = 22.3
+		options['bat1'] = 23.5
+		options['bat2'] = 24.1
+		options['bat3'] = 46.5
 
 		async_to_sync(channel_layer.group_send)('bgUpdateConsumers_status', options)
 
@@ -517,18 +557,20 @@ threading.Thread(target=threadGUIupdate_AUTONOMOUS).start()
 def threadGUIupdate_roboticArm():
 
 	global joint0, joint1, joint2, joint3, joint4, joint5, joint6
+	global A_0, A_1, A_2, A_3, A_4, A_5, A_6
+	global B_0, B_1, B_2, B_3, B_4, B_5, B_6
 
 	while True:
 		options = {}
 		options['type'] = 'updateGUI'
 
-		options['joint0'] = joint0
-		options['joint1'] = joint1
-		options['joint2'] = joint2
-		options['joint3'] = joint3
-		options['joint4'] = joint4
-		options['joint5'] = joint5
-		options['joint6'] = joint6
+		options['joint0'] = A_0*joint0+B_0
+		options['joint1'] = A_1*joint1+B_1
+		options['joint2'] = A_2*joint2+B_2
+		options['joint3'] = A_3*joint3+B_3
+		options['joint4'] = A_4*joint4+B_4
+		options['joint5'] = A_5*joint5+B_5
+		options['joint6'] = A_6*joint6+B_6
 
 		async_to_sync(channel_layer.group_send)('bgUpdateConsumers_roboticArm', options)
 

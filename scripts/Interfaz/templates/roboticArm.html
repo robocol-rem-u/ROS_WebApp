@@ -98,7 +98,7 @@
 	font-size: 25px;
 	background: #f7f7f7;
 	padding: 15px 30px;
-	margin: 0 10px;
+	margin: 0 2px;
 	border: 1px solid #c4c4c4;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -229,11 +229,11 @@
 	<div style="position: absolute;top: 0;bottom: 0;right: 100px;margin: auto;width: 225px;height: 313px">
 		
 		
-		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 2:</label><input disabled style="color: black;padding: 5px;font-size: 12px" type="number" name="" value="0" id = "joint2"><br>
+		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 2:</label><input disabled style="color: black;padding: 5px;font-size: 12px"" name="" value="0" id = "joint2"><br>
 
-		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 4:</label><input disabled style="color: black;padding: 5px;font-size: 12px" type="number" name="" value="0" id = "joint4"><br>
+		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 4:</label><input disabled style="color: black;padding: 5px;font-size: 12px" name="" value="0" id = "joint4"><br>
 
-		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 6:</label><input disabled style="color: black;padding: 5px;font-size: 12px" type="number" name="" value="0" id = "joint6"><br>
+		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 6:</label><input disabled style="color: black;padding: 5px;font-size: 12px" name="" value="0" id = "joint6"><br>
 
 
 		<input type="range" min="0" max="255" value="0" class="slider" id="garra" onchange="sendMessage(this.value)">
@@ -246,13 +246,13 @@
 	<div style="position: absolute;top: 0;bottom: 0;right: 0;right: 400px;margin: auto;width: 225px;height: 313px">
 		
 		
-		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 1:</label><input disabled style="color: black;padding: 5px;font-size: 12px" type="number" name="" value="0" id = "joint1"><br>
+		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 1:</label><input disabled style="color: black;padding: 5px;font-size: 12px" name="" value="0" id = "joint1"><br>
 
-		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 3:</label><input disabled style="color: black;padding: 5px;font-size: 12px" type="number" name="" value="0" id = "joint3"><br>
+		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 3:</label><input disabled style="color: black;padding: 5px;font-size: 12px" name="" value="0" id = "joint3"><br>
 
-		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 5:</label><input disabled style="color: black;padding: 5px;font-size: 12px" type="number" name="" value="0" id = "joint5"><br>
+		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 5:</label><input disabled style="color: black;padding: 5px;font-size: 12px" name="" value="0" id = "joint5"><br>
 
-		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 7:</label><input disabled style="color: black;padding: 5px;font-size: 12px" type="number" name="" value="0" id = "joint7"><br>
+		<label style="font-weight: 100;margin-bottom: 50px;display: inline-block;margin-right: 20px">Joint 7:</label><input disabled style="color: black;padding: 5px;font-size: 12px" name="" value="0" id = "joint7"><br>
 
 
 
@@ -385,13 +385,14 @@
 
 		var data = JSON.parse(e.data);
 
-		$("#joint1").val(data.joint0)
-		$("#joint2").val(data.joint1)
-		$("#joint3").val(data.joint2)
-		$("#joint4").val(data.joint3)
-		$("#joint5").val(data.joint4)
-		$("#joint6").val(data.joint5)
-		$("#joint7").val(data.joint6)
+		$("#joint1").val(data.joint0.toFixed(2)+String.fromCharCode(176))
+		$("#joint2").val(data.joint1.toFixed(2)+String.fromCharCode(176))
+		$("#joint3").val(data.joint2.toFixed(2)+String.fromCharCode(176))
+		$("#joint4").val(data.joint3.toFixed(2)+String.fromCharCode(176))
+		$("#joint5").val(data.joint4.toFixed(2)+String.fromCharCode(176))
+		$("#joint6").val(data.joint5.toFixed(2)+String.fromCharCode(176))
+		$("#joint7").val(data.joint6.toFixed(2)+String.fromCharCode(176))
+		$("#joint7").val("-.--"+String.fromCharCode(176))
 
 	}
 
