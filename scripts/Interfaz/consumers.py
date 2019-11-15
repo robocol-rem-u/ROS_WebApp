@@ -223,8 +223,10 @@ joint6 = 0
 global A_0, A_1, A_2, A_3, A_4, A_5, A_6
 global B_0, B_1, B_2, B_3, B_4, B_5, B_6
 
-A_0, A_1, A_2, A_3, A_4, A_5, A_6 = 0.2365, 0.3598, 0.3749, 0.365, -0.3716, 0.3629, 0.3
-B_0, B_1, B_2, B_3, B_4, B_5, B_6 = -577.67, -1032.5, -1014.4, -688.21, 948.31, -970.8, -400
+#A_0, A_1, A_2, A_3, A_4, A_5, A_6 = 0.2365, 0.3598, 0.3749, 0.365, -0.3716, 0.3629, 0.3
+#B_0, B_1, B_2, B_3, B_4, B_5, B_6 = -577.67, -1032.5, -1014.4, -688.21, 948.31, -970.8, -400
+A_0, A_1, A_2, A_3, A_4, A_5, A_6 = -0.2436,1,1,1,1,1,1
+B_0, B_1, B_2, B_3, B_4, B_5, B_6 = 834.71,0,0,0,0,0,0
 
 ## Geo
 
@@ -399,7 +401,7 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 			if (id_motor == 1 or id_motor == 2):
 				speed = 25
 			elif (id_motor == 3 or id_motor == 4 or id_motor == 5 or id_motor == 6 or id_motor == 7):
-				speed = 50
+				speed = 25
 		mensaje = ""
 		if text_data_json['type'] == "STOP":
 			mensaje = letrasMotores[text_data_json['id']-1] + "0" + SEPARADOR_POSITIVO
@@ -411,7 +413,7 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 			mensaje = letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_NEGATIVO
 			# transmitirMensaje(letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_NEGATIVO )
 		elif text_data_json['type'] == "PINZA":
-			mensaje = "T" + str(text_data_json['num']) + SEPARADOR_POSITIVO
+			mensaje = "S" + str(text_data_json['num']) + SEPARADOR_POSITIVO
 			# transmitirMensaje("S" + str(text_data_json['num']) + SEPARADOR_POSITIVO )
 		msg = arm_Orders()
 		msg.message = mensaje# .encode('utf-8')
@@ -489,9 +491,9 @@ def threadGUIupdate_STATUS():
 		options = {}
 		options['type'] = 'updateGUI'
 
-		options['L0_speed'] = L0_speed
-		options['L1_speed'] = L1_speed
-		options['L2_speed'] = L2_speed
+		options['L0_speed'] = L1_speed
+		options['L1_speed'] = L2_speed
+		options['L2_speed'] = L0_speed
 		options['R0_speed'] = R0_speed
 		options['R1_speed'] = R1_speed
 		options['R2_speed'] = R2_speed
