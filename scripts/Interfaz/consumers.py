@@ -49,7 +49,9 @@ def pots_Callback(param):
 	global joint0_av, joint1_av, joint2_av, joint3_av, joint4_av, joint5_av, joint6_av
 	global j_counter
 
-	if j_counter == 10:
+	wind = 1
+
+	if j_counter == wind:
 		joint0 = joint0_av
 		joint1 = joint1_av
 		joint2 = joint2_av
@@ -67,14 +69,13 @@ def pots_Callback(param):
 		j_counter = 0
 	else:
 		j_counter+=1
-		joint0_av += param.J0/10
-		joint1_av += param.J1/10
-		joint2_av += param.J2/10
-		joint3_av += param.J3/10
-		joint4_av += param.J4/10
-		joint5_av += param.J5/10
-		joint6_av += param.J6/10
-		
+		joint0_av += param.J0/wind
+		joint1_av += param.J1/wind
+		joint2_av += param.J2/wind
+		joint3_av += param.J3/wind
+		joint4_av += param.J4/wind
+		joint5_av += param.J5/wind
+		joint6_av += param.J6/wind
 
 
 def	current_Callback(param):
@@ -411,7 +412,7 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 			mensaje = letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_NEGATIVO
 			# transmitirMensaje(letrasMotores[text_data_json['id']-1] + str(speed) + SEPARADOR_NEGATIVO )
 		elif text_data_json['type'] == "PINZA":
-			mensaje = "T" + str(text_data_json['num']) + SEPARADOR_POSITIVO
+			mensaje = "V" + str(text_data_json['num']) + SEPARADOR_POSITIVO
 			# transmitirMensaje("S" + str(text_data_json['num']) + SEPARADOR_POSITIVO )
 		msg = arm_Orders()
 		msg.message = mensaje# .encode('utf-8')
