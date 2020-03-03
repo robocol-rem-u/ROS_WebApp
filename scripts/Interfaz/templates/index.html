@@ -163,10 +163,7 @@
 
 
 
-	<div id="telemetry" style="z-index: 4;height: calc(470px);width: calc(55vw - 50px);position: absolute;padding:2%;top: 0;bottom: 0;left: 50px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);background: #ffffff08;margin: auto;">
-
-
-
+	<div id="telemetry" style="z-index: 4;height: calc(470px);width: calc(55vw - 50px);position: absolute;padding:2%;top: -10px;bottom: 0;left: 50px;border-radius: 20px;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);background: #ffffff08;margin: auto;">
 
 		<label style="font-weight: 100; font-size: 28px;margin-bottom: 10px;display: inline-block;">Rover Telemetry:</label>
 
@@ -237,14 +234,29 @@
 
 		</div>
 
-
-
-
-
-
-
 	</div>
 
+	<div id="controller" style="z-index: 3;height: calc(470px);width: calc(55vw - 50px);position: absolute;padding:2%;bottom: -150px;right: -320px">
+
+		<div class="form-style-10" style="text-align: center;">
+
+			<label style="display: inline-block;margin-right: 10%;text-align: left;">P <div> <input id="P_cont" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+		</div>
+
+		<div class="form-style-10" style="text-align: center;">
+
+			<label style="display: inline-block;margin-right: 10%;text-align: left;">I <div> <input disabled id="I_cont" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+		</div>
+
+		<div class="form-style-10" style="text-align: center;">
+
+			<label style="display: inline-block;margin-right: 10%;text-align: left;">D <div> <input disabled id="D_cont" name="field1" style="background: white;color:black;width: 100%;display: inline-block;" /> </div></label>
+
+		</div>
+
+	</div>
 
 	<div style="position: absolute;width: 100vw;z-index: 4;left: 0;bottom: 0;border-top: 2.5px solid rgb(107, 107, 107);background-color: rgba(255, 255, 255, 0.28);padding-bottom: 14px;height: 65px;padding: 5px; display: flex;" id="bottom_banner">
 
@@ -266,9 +278,9 @@
 
 		</div>
 
-		<div id="btn4" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/geo'">
+		<div id="btn4" style="display: flex;align-items: center;margin: 5px; width: calc( ( 100vw / 5 ) - 22px ); height: 70%; text-align: center;box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);padding: 5px;cursor: pointer;" onclick="window.location='/sensors'">
 
-			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Geoscientific Toolkit</label>
+			<label style="cursor: pointer;margin: 0 auto;color: white;font-size: 22px;font-weight: 100">Sensors Toolkit</label>
 
 		</div>
 
@@ -319,6 +331,16 @@
 		$("#PWM_I").val(data['PWM_I'] + " RPM")
 		$("#PWM_D").val(data['PWM_D'] + " RPM")
 		$("#sensibilidad_jk_fisico").val(data['sensibilidad_jk_fisico'] + " RPM")
+
+
+		// PID CONTROLLER
+		// data['P_cont']=1
+		// data['I_cont']=0
+		// data['D_cont']=0
+
+		// $("#P_cont").val(data['P_cont'] + "")
+		// %$("#I_cont").val(data['I_cont'] + "")
+		// $("#D_cont").val(data['D_cont'] + "")
 
 
 		if (data['com'] == false)

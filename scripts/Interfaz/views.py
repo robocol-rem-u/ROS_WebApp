@@ -18,9 +18,9 @@ def auto(request):
 	return render(request, 'auto.html')
 
 
-def geo(request):
+def sensors(request):
 
-	return render(request, 'geo.html')
+	return render(request, 'sensors.html')
 
 
 def status(request):

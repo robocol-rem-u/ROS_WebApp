@@ -10,7 +10,7 @@ urlpatterns = [
     path('favicon.ico', favicon_view, name='favicon'),
 	path('roboticArm', views.roboticArm, name='roboticArm'),
 	path('auto', views.auto, name='auto'),
-	path('geo', views.geo, name='geo'),
+	path('sensors', views.sensors, name='sensors'),
     path('status', views.status, name='status'),
 
 ]

@@ -14,7 +14,7 @@ from nav_msgs.msg import Odometry
 channel_layer = channels.layers.get_channel_layer()
 
 #ROS imports
-from master_msgs.msg import traction_Orders, imu_Speed, imu_Magnetism, pots, current, rpm, arm_Orders, connection, batteries, geociencia
+from master_msgs.msg import traction_Orders, imu_Speed, imu_Magnetism, pots, current, rpm, arm_Orders, connection, batteries, geociencia,PID
 from master_msgs.srv import service_enable
 import rospy
 
@@ -129,6 +129,8 @@ rospy.init_node('Django_node', anonymous=True)
 pub_Traction_Orders = rospy.Publisher('topic_traction_orders', traction_Orders, queue_size=10)
 pub_Arm_Orders = rospy.Publisher('topic_arm_orders', arm_Orders, queue_size=10)
 pub_Connection = rospy.Publisher('topic_connection', connection, queue_size=10)
+#pub_PID = rospy.Publisher('topic_PID', PID, queue_size=10)
+
 
 #ROS Subscribers
 rospy.Subscriber('topic_traction_orders', traction_Orders, traction_Orders_Callback)
@@ -274,6 +276,12 @@ class bgUpdate_traction(WebsocketConsumer):
 		text_data_json = json.loads(text_data)
 		if text_data_json['type'] == ACCION_JK:
 			procesarJoystick(text_data_json['deltaX'], text_data_json['deltaY'], text_data_json['sensibilidad'])
+		# PID_order = PID()
+		# PID_order.P = np.float32(5)
+		# PID_order.I = np.float32(2)
+		# PID_order.D = np.float32(1)
+		# order.header.stamp = rospy.Time.now()
+		# pub_PID.publish(PID_order)
 
 	def updateGUI(self, event):
 		self.send(text_data=json.dumps(event))
@@ -339,8 +347,6 @@ class bgUpdate_autonomous(WebsocketConsumer):
 		async_to_sync(self.channel_layer.group_discard)(self.room_group_name,self.channel_name)
 
 
-
-
 	def receive(self, text_data):
 
 		global landmarksAutonomous, landmarksReached, autonomousStatus, updateAutonomous, controlAutonomoActivo
@@ -367,8 +373,6 @@ class bgUpdate_autonomous(WebsocketConsumer):
 		elif text_data_json['type'] == CONTINUE:
 			autonomousStatus = AUTO_GOING_TO_LANDMARK
 			updateAutonomous = True
-
-
 
 
 	def updateGUI(self, event):
@@ -429,10 +433,10 @@ class bgUpdate_roboticArm(WebsocketConsumer):
 
 
 #### CONSUMER DE ACTUALIZACION PARA LA INTERFAZ DE GEOCIENCIAS ####
-class bgUpdate_geo(WebsocketConsumer):
+class bgUpdate_sensors(WebsocketConsumer):
 	def connect(self):
 		self.room_name = 'e'+str(time.time())
-		self.room_group_name = 'bgUpdateConsumers_geo'
+		self.room_group_name = 'bgUpdateConsumers_sensors'
 		async_to_sync(self.channel_layer.group_add)(self.room_group_name, self.channel_name)
 		self.accept()
 
@@ -585,7 +589,7 @@ threading.Thread(target=threadGUIupdate_roboticArm).start()
 
 #### THREAD PARA ACTUALIZAR LA INTERFAZ DE TRACCION ####
 
-def threadGUIupdate_geo():
+def threadGUIupdate_sensors():
 
 	global humedad, metano, hidrogeno, tempratura
 
@@ -598,12 +602,12 @@ def threadGUIupdate_geo():
 		options['hidrogeno'] = hidrogeno
 		options['temperatura'] = tempratura
 
-		async_to_sync(channel_layer.group_send)('bgUpdateConsumers_geo', options)
+		async_to_sync(channel_layer.group_send)('bgUpdateConsumers_sensors', options)
 
 		time.sleep(GUI_UPDATE_RATE)
 
 	
-threading.Thread(target=threadGUIupdate_geo).start()
+threading.Thread(target=threadGUIupdate_sensors).start()
 
 #### METODO PARA RECIBIR LAS ACCIONES DE UN JOYSTICK ####
 #Requiere convertir x, y entre -1 y 1
@@ -678,7 +682,6 @@ def steering(x, y, sensibilidad_rcv):
 
 
 #ROS auxiliary exit check
-
 def ROS_exit_helper():
 	while True:
 		if rospy.is_shutdown():
