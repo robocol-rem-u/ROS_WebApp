@@ -8,6 +8,5 @@ This package contains Robocol's web interface for controlling the rover implemen
   For Ubuntu 18.04:  
   http://wiki.ros.org/melodic/Installation/Ubuntu
 - Django channels
-- json
+- simplejson
 - Numpy
-
