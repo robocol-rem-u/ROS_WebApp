@@ -10,3 +10,4 @@ This package contains Robocol's web interface for controlling the rover implemen
 - Django channels
 - simplejson
 - Numpy
+- redis
